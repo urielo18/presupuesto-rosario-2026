@@ -494,7 +494,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <div>
             <h1>Presupuesto & OGI 2026 - Control Fiscal Rosario</h1>
@@ -505,7 +504,6 @@
         </div>
     </div>
 
-    <!-- KPIs Principales -->
     <div class="grid-kpi">
         <div class="kpi-card">
             <span class="title">Total Presupuesto General</span>
@@ -539,7 +537,6 @@
         </div>
     </div>
 
-    <!-- Navegación de Pestañas -->
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="openTab('tab-simulador')">⚡ Simulador de Recortes & Tasas</button>
         <button class="tab-btn" onclick="openTab('tab-trazabilidad')">🔗 Matriz de Trazabilidad Completa (OGI ↔ Gasto)</button>
@@ -551,7 +548,6 @@
     <!-- TAB 1: SIMULADOR -->
     <div id="tab-simulador" class="tab-content active">
         
-        <!-- Presets rápidos -->
         <div class="presets-bar">
             <span style="font-size: 0.75rem; color: var(--accent); font-weight: 700; align-self: center;">Cargar Escenarios Rápidos:</span>
             <button class="preset-btn" onclick="applyPreset('cero-sellados')">📄 Cero Sellados y Trámites</button>
@@ -564,7 +560,6 @@
 
         <div class="sim-container">
             
-            <!-- Columna Izquierda: Aplicar Recortes -->
             <div class="card">
                 <h2>1. Aplicar Recortes en el Gasto <span class="tag tag-green">Ahorro Fiscal</span></h2>
                 
@@ -573,12 +568,10 @@
                     <button id="btn-mode-inc" class="mode-btn" onclick="setRecorteMode('incisos')">📦 Recorte Global por Inciso</button>
                 </div>
 
-                <!-- VISTA 1: POR SECRETARÍA -->
                 <div id="view-secretarias" class="scrollable-sliders">
                     <!-- Generado dinámicamente -->
                 </div>
 
-                <!-- VISTA 2: POR INCISO GLOBAL -->
                 <div id="view-incisos" class="scrollable-sliders" style="display: none;">
                     <div class="slider-group">
                         <div class="slider-header">
@@ -617,7 +610,6 @@
                     </div>
                 </div>
 
-                <!-- Resumen de Ahorro -->
                 <div class="result-box">
                     <div class="result-row">
                         <span>Ahorro en Servicios No Personales / Operativo:</span>
@@ -638,11 +630,9 @@
                 </div>
             </div>
 
-            <!-- Columna Derecha: Tasas y DReI a Derogar / Reducir -->
             <div class="card">
                 <h2>2. Alivio Tributario (OGI & Presupuesto) <span class="tag tag-red">Costo Fiscal</span></h2>
                 
-                <!-- BLOQUE ESPECIAL DReI -->
                 <div class="drei-box">
                     <div class="drei-header">
                         <span class="drei-title">💼 DReI Alícuota General (Base Libre: $228.741 M)</span>
@@ -665,12 +655,10 @@
                     Marcá las tasas, sellados o sobretasas que el proyecto derogará:
                 </p>
 
-                <!-- CHECKLIST DE TASAS Y FONDOS -->
                 <div id="taxes-checklist" class="scrollable-sliders" style="max-height: 360px;">
                     <!-- Generado dinámicamente -->
                 </div>
 
-                <!-- Resumen de Costo y Balance -->
                 <div class="result-box">
                     <div class="result-row">
                         <span>Costo de Rebaja en DReI:</span>
@@ -686,12 +674,10 @@
                     </div>
                 </div>
 
-                <!-- Banner de Viabilidad -->
                 <div id="balance-banner" class="balance-card balance-ok">
                     Ajustá los recortes y marcá tributos para evaluar el balance fiscal.
                 </div>
 
-                <!-- Generador de Dictamen Legislativo -->
                 <div style="margin-top: 14px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">📝 Minuta Técnica para Proyecto de Ordenanza</span>
@@ -921,7 +907,7 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
                     <thead>
                         <tr>
                             <th>Código</th>
-                            <th>Art. OGI</th>
+                            <th>Norma / Art.</th>
                             <th>Denominación del Recurso</th>
                             <th style="text-align:right;">Monto Presupuestado 2026</th>
                             <th>Tipo de Ingreso</th>
@@ -937,7 +923,6 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
     </div>
 
     <script>
-        // 1. Secretarías (Gastos Operativos: Inciso 3 + Inciso 2)
         const SECRETARIAS_DATA = [
             { id: "sec-ambiente", name: "Ambiente y Espacio Público", gastoOperativo: 142000, desc: "Higiene urbana, recolección de residuos, alumbrado, mantenimiento verde" },
             { id: "sec-obras", name: "Obras Públicas", gastoOperativo: 76000, desc: "Mantenimiento vial, bacheo, cuadrillas, señalización e infraestructura" },
@@ -953,14 +938,13 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
             { id: "sec-genero", name: "Igualdad, Género y DD.HH.", gastoOperativo: 3800, desc: "Campañas públicas de concientización, talleres y dispositivos" }
         ];
 
-        // 2. Checklist de Tasas OGI
         const TASAS_CHECKLIST = [
             { id: "t-vial-combustibles", name: "Tasa Mantenimiento Vías Urbanas (Tasa Vial Combustibles)", amount: 5779.03, desc: "Art. 96 ter OGI. 1,60% por litro de combustible líquido y m³ de GNC.", cat: "Tasa Vial" },
-            { id: "drei-transporte", name: "Sobretasa DReI - Fondo Compensador Transporte", amount: 14732.05, desc: "Adosado en el DReI para subsidiar el sistema de colectivos.", cat: "DReI Afectado" },
-            { id: "drei-salud", name: "Sobretasa DReI - Fondo Insumos para la Salud", amount: 12986.50, desc: "Porcentaje adosado al DReI con destino a compras médicas.", cat: "DReI Afectado" },
-            { id: "drei-discapacidad", name: "Sobretasa DReI - Fondo Discapacitados", amount: 1755.28, desc: "Sobretasa específica en el DReI para programas de discapacidad.", cat: "DReI Afectado" },
-            { id: "drei-garantias", name: "Sobretasa DReI - Fondo Garantías Transporte", amount: 1636.90, desc: "Fondo de reserva del sistema de colectivos vía DReI.", cat: "DReI Afectado" },
-            { id: "drei-menor", name: "Sobretasa DReI - Fondo Menor y Familia", amount: 38.76, desc: "Fondo específico menor adosado al DReI.", cat: "DReI Afectado" },
+            { id: "drei-transporte", name: "Sobretasa DReI - Fondo Compensador Transporte", amount: 14732.05, desc: "Ord. 7099/01. Adosado en el DReI para subsidiar el sistema de colectivos.", cat: "DReI Afectado" },
+            { id: "drei-salud", name: "Sobretasa DReI - Fondo Insumos para la Salud", amount: 12986.50, desc: "Ord. Salud / CTM. Porcentaje adosado al DReI con destino a compras médicas.", cat: "DReI Afectado" },
+            { id: "drei-discapacidad", name: "Sobretasa DReI - Fondo Discapacitados", amount: 1755.28, desc: "Ord. 9524. Sobretasa específica en el DReI para programas de discapacidad.", cat: "DReI Afectado" },
+            { id: "drei-garantias", name: "Sobretasa DReI - Fondo Garantías Transporte", amount: 1636.90, desc: "Ord. 7099/01. Fondo de reserva del sistema de colectivos vía DReI.", cat: "DReI Afectado" },
+            { id: "drei-menor", name: "Sobretasa DReI - Fondo Menor y Familia", amount: 38.76, desc: "Ord. Social. Fondo específico menor adosado al DReI.", cat: "DReI Afectado" },
             { id: "t-act-adm", name: "Tasa Actuaciones Administrativas (Sellados de Trámites)", amount: 6613.35, desc: "Arts. 97 a 110 OGI. Sellados burocráticos por notas y expedientes.", cat: "Sellados" },
             { id: "t-medidores", name: "Tasa Contralor e Inspección de Medidores (Luz y Gas)", amount: 1837.88, desc: "Art. 59 OGI. 6‰ sobre facturas de gas y energía eléctrica.", cat: "Tasas Servicios" },
             { id: "t-planos", name: "Tasa Servicios Técnicos y Revisión de Planos", amount: 792.18, desc: "Arts. 60 y 61 OGI. Arancel por presentar planos de obras.", cat: "Tasas Obras" },
@@ -981,98 +965,79 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
             { id: "d-etur", name: "Contribución Especial ETUR (Ente de Turismo)", amount: 1947.76, desc: "Art. 12 ter OGI. Adicional cobrado a comercios y hoteles.", cat: "Derechos" }
         ];
 
-        // 3. Matriz de Trazabilidad 100% Desagregada (OGI ↔ Destino Presupuestario)
         const TRAZABILIDAD_DATA = [
-            // VIALES
             { cat: "VIAL", art: "Art. 96 ter / quater", tasa: "Tasa Mantenimiento Vías Urbanas (Combustibles Líquidos y GNC)", cod: "11.01.02.04.07", monto: "$ 5.779 M", fondo: "Fondo Mantenimiento Vías Urbanas (Fte 2.01.72)", sec: "Obras Públicas", gasto: "Fresado, bacheo y pavimentación por administración (Inciso 3 y 2)", propuesta: "Derogación directa por doble imposición. Reducir compras operativas de asfalto." },
-
-            // DREI
-            { cat: "DREI", art: "Arts. 7, 8 y 10", tasa: "Derecho de Registro e Inspección (DReI Básico / Libre)", cod: "11.01.03.01.01", monto: "$ 228.741 M", fondo: "Libre Disponibilidad (Rentas Generales)", sec: "Hacienda / Administración Central", gasto: "Financiamiento general de gastos corrientes y operativos", propuesta: "Reducción de alícuotas básicas (6,5‰ general) a pymes e industrias barriales." },
-            { cat: "DREI", art: "Art. 8 (Fdo. Transporte)", tasa: "DReI - Fondo Compensador Sistema de Transporte", cod: "11.01.03.01.06", monto: "$ 14.732 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios directos a líneas del Transporte Urbano de Pasajeros (Inciso 5)", propuesta: "Eliminar el recargo del DReI. Reestructurar el costo por kilómetro del TUP." },
-            { cat: "DREI", art: "Art. 8 (Fdo. Salud)", tasa: "DReI - Fondo Insumos Para la Salud", cod: "11.01.03.01.02", monto: "$ 12.986 M", fondo: "Fondo Insumos para la Salud (Fte 2.01.14)", sec: "Salud Pública", gasto: "Adquisición de medicamentos y descartables de la red asistencial (Inciso 2)", propuesta: "Unificar en Rentas Generales y auditar gastos no asistenciales de Salud." },
-            { cat: "DREI", art: "Art. 8 (Fdo. Discapacitados)", tasa: "DReI - Fondo Discapacitados", cod: "11.01.03.01.03", monto: "$ 1.755 M", fondo: "Fondo para Discapacitados (Fte 2.01.19)", sec: "Desarrollo Humano y Género", gasto: "Subsidios y programas de accesibilidad e inclusión (Inciso 5)", propuesta: "Absorber con ahorro en eventos y capacitaciones institucionales." },
-            { cat: "DREI", art: "Art. 8 (Fdo. Garantías)", tasa: "DReI - Fondo Garantías Sistema de Transporte", cod: "11.01.03.01.07", monto: "$ 1.636 M", fondo: "Fondo Garantías Sistema de Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Fondo de contingencia y garantías del sistema de colectivos", propuesta: "Suprimir el fondo de reserva y financiar contingencias con mayor eficiencia." },
-            { cat: "DREI", art: "Art. 8 (Fdo. Menor)", tasa: "DReI - Fondo de Atención al Menor y la Familia", cod: "11.01.03.01.05", monto: "$ 38,7 M", fondo: "Fondo Menor y Familia (Fte 2.01.23)", sec: "Desarrollo Humano", gasto: "Asistencia directa a niñez y familias vulnerables", propuesta: "Absorber directamente en el presupuesto corriente de Desarrollo Humano." },
-
-            // TGI Y SOBRETASAS
+            { cat: "DREI", art: "Arts. 7 y 8 OGI", tasa: "Derecho de Registro e Inspección (DReI Básico / Libre)", cod: "11.01.03.01.01", monto: "$ 228.741 M", fondo: "Libre Disponibilidad (Rentas Generales)", sec: "Hacienda / Administración Central", gasto: "Financiamiento general de gastos corrientes y operativos", propuesta: "Reducción de alícuotas básicas (6,5‰ general) a pymes e industrias barriales." },
+            { cat: "DREI", art: "Ord. 7099/01", tasa: "DReI - Fondo Compensador Sistema de Transporte", cod: "11.01.03.01.06", monto: "$ 14.732 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios directos a líneas del Transporte Urbano de Pasajeros (Inciso 5)", propuesta: "Eliminar el recargo del DReI. Reestructurar el costo por kilómetro del TUP." },
+            { cat: "DREI", art: "Ord. Salud / CTM", tasa: "DReI - Fondo Insumos Para la Salud", cod: "11.01.03.01.02", monto: "$ 12.986 M", fondo: "Fondo Insumos para la Salud (Fte 2.01.14)", sec: "Salud Pública", gasto: "Adquisición de medicamentos y descartables de la red asistencial (Inciso 2)", propuesta: "Unificar en Rentas Generales y auditar gastos no asistenciales de Salud." },
+            { cat: "DREI", art: "Ord. 9524", tasa: "DReI - Fondo Discapacitados", cod: "11.01.03.01.03", monto: "$ 1.755 M", fondo: "Fondo para Discapacitados (Fte 2.01.19)", sec: "Desarrollo Humano y Género", gasto: "Subsidios y programas de accesibilidad e inclusión (Inciso 5)", propuesta: "Absorber con ahorro en eventos y capacitaciones institucionales." },
+            { cat: "DREI", art: "Ord. 7099/01", tasa: "DReI - Fondo Garantías Sistema de Transporte", cod: "11.01.03.01.07", monto: "$ 1.636 M", fondo: "Fondo Garantías Sistema de Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Fondo de contingencia y garantías del sistema de colectivos", propuesta: "Suprimir el fondo de reserva y financiar contingencias con mayor eficiencia." },
+            { cat: "DREI", art: "Ord. Social", tasa: "DReI - Fondo de Atención al Menor y la Familia", cod: "11.01.03.01.05", monto: "$ 38,7 M", fondo: "Fondo Menor y Familia (Fte 2.01.23)", sec: "Desarrollo Humano", gasto: "Asistencia directa a niñez y familias vulnerables", propuesta: "Absorber directamente en el presupuesto corriente de Desarrollo Humano." },
             { cat: "TGI", art: "Arts. 1 a 6", tasa: "Tasa General de Inmuebles (TGI Pura / Libre)", cod: "11.01.02.01.01", monto: "$ 90.114 M", fondo: "Libre Disponibilidad (Rentas Generales)", sec: "Ambiente / Obras / Hacienda", gasto: "Barrido, alumbrado, recolección y servicios urbanos generales", propuesta: "Transparencia tarifaria: congelamiento de coeficientes catastrales." },
-            { cat: "TGI", art: "Art. 1 (FMOP Salud)", tasa: "TGI - Fondo Solidario Emergencia Salud", cod: "11.01.02.01.04", monto: "$ 12.727 M", fondo: "Fondo Solidario Emergencia Sanitaria (Fte 2.01.15)", sec: "Salud Pública", gasto: "Funcionamiento de guardias y efectores municipales (Inciso 2 y 3)", propuesta: "Eliminar el recargo en la boleta de TGI compensando con baja de servicios contratados." },
-            { cat: "TGI", art: "Art. 1 (FMOP Desagües)", tasa: "TGI - FMOP Fondo de Desagües Pluviales", cod: "11.01.02.01.03", monto: "$ 11.600 M", fondo: "FMOP - Desagües Pluviales (Fte 2.01.05)", sec: "Obras Públicas / Ambiente", gasto: "Mantenimiento de drenajes a cielo abierto y sumideros (Inciso 3)", propuesta: "Integrar al plan regular de obras públicas y auditar contratos tercerizados." },
-            { cat: "TGI", art: "Art. 1 (FMOP Obras)", tasa: "TGI - Fondo Municipal de Obras Públicas", cod: "11.01.02.01.02", monto: "$ 5.327 M", fondo: "Fondo Municipal de Obras Públicas (Fte 2.01.04)", sec: "Obras Públicas", gasto: "Plan de pavimentación y trabajos públicos en barrios (Inciso 4)", propuesta: "Financiar obras con recursos de capital provinciales y crédito aprobado." },
-            { cat: "TGI", art: "Art. 1 (Forestación)", tasa: "TGI - Fondo Municipal de Forestación", cod: "11.01.02.01.06", monto: "$ 454 M", fondo: "Fondo Municipal de Forestación (Fte 2.01.09)", sec: "Ambiente y Espacio Público", gasto: "Plantación y poda de arbolado público por terceros (Inciso 3)", propuesta: "Eliminar la sobretasa de TGI ejecutando arbolado con cuadrillas propias." },
-            { cat: "TGI", art: "Art. 1 (Preservación)", tasa: "TGI - Fondo Preservación Urbanística", cod: "11.01.02.01.07", monto: "$ 191 M", fondo: "Fondo Preservación Urbanística (Fte 2.01.03)", sec: "Planeamiento / Cultura", gasto: "Subsidios y mantenimiento de fachadas de valor histórico", propuesta: "Derogar sobretasa y canalizar convenios urbanísticos de compensación." },
-            { cat: "TGI", art: "Art. 1 (Alumbrado)", tasa: "TGI - Fondo Contribución Alumbrado Público", cod: "11.01.02.01.05", monto: "$ 302 M", fondo: "Fondo Contribución Alumbrado (Fte 2.01.08)", sec: "Ambiente y Espacio Público", gasto: "Mantenimiento de luminarias y repuestos LED (Inciso 2 y 3)", propuesta: "Eliminar el recargo: ya se cobra el 6% de la EPE por el mismo concepto." },
-            { cat: "TGI", art: "Art. 1 (PROMUSIDA)", tasa: "TGI - Sobretasa PROMUSIDA", cod: "11.01.02.01.08", monto: "$ 909 M", fondo: "PROMUSIDA (Fte 2.01.18)", sec: "Salud Pública", gasto: "Campañas de prevención y testeo sanitario", propuesta: "Unificar en el presupuesto operativo central de Salud." },
-            { cat: "TGI", art: "Art. 1 (Emerg. Salud)", tasa: "TGI - Fondo Emergencia Salud", cod: "11.01.02.01.09", monto: "$ 909 M", fondo: "Fondo Emergencia de Salud (Fte 2.01.16)", sec: "Salud Pública", gasto: "Gastos extraordinarios de salud pública", propuesta: "Eliminar la partida redundante de la boleta inmobiliaria." },
-            { cat: "TGI", art: "Art. 1 (Infraestructuras)", tasa: "TGI - Fondo Especial Infraestructuras Industriales", cod: "11.01.02.01.10", monto: "$ 114 M", fondo: "Fondo Desarrollo Infraestructuras (Fte 2.01.71)", sec: "Desarrollo Económico / Obras", gasto: "Obras en polígonos y áreas industriales de la ciudad", propuesta: "Absorber con convenios urbanísticos productivos." },
-
-            // SELLADOS Y TRÁMITES
-            { cat: "SELLADOS", art: "Arts. 97 a 110 (Gral)", tasa: "Tasa de Actuaciones Administrativas (Sellados Trámites LD)", cod: "11.01.02.05.01", monto: "$ 1.505 M", fondo: "Libre Disponibilidad (Rentas Generales)", sec: "Gobierno / Secretaría General", gasto: "Papelería, gastos de administración e insumos de oficina", propuesta: "Derogación del 100% de sellados. Todo trámite digitalizado debe ser gratuito." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Solidario Emergencia Salud", cod: "11.01.02.01.04", monto: "$ 12.727 M", fondo: "Fondo Solidario Emergencia Sanitaria (Fte 2.01.15)", sec: "Salud Pública", gasto: "Funcionamiento de guardias y efectores municipales (Inciso 2 y 3)", propuesta: "Eliminar el recargo en la boleta de TGI compensando con baja de servicios contratados." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - FMOP Fondo de Desagües Pluviales", cod: "11.01.02.01.03", monto: "$ 11.600 M", fondo: "FMOP - Desagües Pluviales (Fte 2.01.05)", sec: "Obras Públicas / Ambiente", gasto: "Mantenimiento de drenajes a cielo abierto y sumideros (Inciso 3)", propuesta: "Integrar al plan regular de obras públicas y auditar contratos tercerizados." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Municipal de Obras Públicas", cod: "11.01.02.01.02", monto: "$ 5.327 M", fondo: "Fondo Municipal de Obras Públicas (Fte 2.01.04)", sec: "Obras Públicas", gasto: "Plan de pavimentación y trabajos públicos en barrios (Inciso 4)", propuesta: "Financiar obras con recursos de capital provinciales y crédito aprobado." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Municipal de Forestación", cod: "11.01.02.01.06", monto: "$ 454 M", fondo: "Fondo Municipal de Forestación (Fte 2.01.09)", sec: "Ambiente y Espacio Público", gasto: "Plantación y poda de arbolado público por terceros (Inciso 3)", propuesta: "Eliminar la sobretasa de TGI ejecutando arbolado con cuadrillas propias." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Preservación Urbanística", cod: "11.01.02.01.07", monto: "$ 191 M", fondo: "Fondo Preservación Urbanística (Fte 2.01.03)", sec: "Planeamiento / Cultura", gasto: "Subsidios y mantenimiento de fachadas de valor histórico", propuesta: "Derogar sobretasa y canalizar convenios urbanísticos de compensación." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Contribución Alumbrado Público", cod: "11.01.02.01.05", monto: "$ 302 M", fondo: "Fondo Contribución Alumbrado (Fte 2.01.08)", sec: "Ambiente y Espacio Público", gasto: "Mantenimiento de luminarias y repuestos LED (Inciso 2 y 3)", propuesta: "Eliminar el recargo: ya se cobra el 6% de la EPE por el mismo concepto." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Sobretasa PROMUSIDA", cod: "11.01.02.01.08", monto: "$ 909 M", fondo: "PROMUSIDA (Fte 2.01.18)", sec: "Salud Pública", gasto: "Campañas de prevención y testeo sanitario", propuesta: "Unificar en el presupuesto operativo central de Salud." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Emergencia Salud", cod: "11.01.02.01.09", monto: "$ 909 M", fondo: "Fondo Emergencia de Salud (Fte 2.01.16)", sec: "Salud Pública", gasto: "Gastos extraordinarios de salud pública", propuesta: "Eliminar la partida redundante de la boleta inmobiliaria." },
+            { cat: "TGI", art: "Art. 1 OGI", tasa: "TGI - Fondo Especial Infraestructuras Industriales", cod: "11.01.02.01.10", monto: "$ 114 M", fondo: "Fondo Desarrollo Infraestructuras (Fte 2.01.71)", sec: "Desarrollo Económico / Obras", gasto: "Obras en polígonos y áreas industriales de la ciudad", propuesta: "Absorber con convenios urbanísticos productivos." },
+            { cat: "SELLADOS", art: "Arts. 97 a 110", tasa: "Tasa de Actuaciones Administrativas (Sellados Trámites LD)", cod: "11.01.02.05.01", monto: "$ 1.505 M", fondo: "Libre Disponibilidad (Rentas Generales)", sec: "Gobierno / Secretaría General", gasto: "Papelería, gastos de administración e insumos de oficina", propuesta: "Derogación del 100% de sellados. Todo trámite digitalizado debe ser gratuito." },
             { cat: "SELLADOS", art: "Art. 109 inc. q", tasa: "Sellado por Transferencia y Alta de Automotores (TUP)", cod: "11.01.02.05.04", monto: "$ 4.145 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios al Transporte Urbano de Pasajeros (Inciso 5)", propuesta: "Eliminar el sellado municipal duplicado al del Registro del Automotor (DNRPA)." },
-            { cat: "SELLADOS", art: "Arts. 97 a 110 (Garantías)", tasa: "Sellados Administrativos - Fondo Garantías Transporte", cod: "11.01.02.05.05", monto: "$ 460 M", fondo: "Fondo Garantías Sistema de Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Garantías y contingencias operativas de movilidad", propuesta: "Eliminación de la tasa accesoria en trámites administrativos." },
-            { cat: "SELLADOS", art: "Arts. 97 a 110 (IMPS)", tasa: "Sellados Administrativos - Aporte al IMPS", cod: "11.01.02.05.03", monto: "$ 501 M", fondo: "Instituto Municipal de Previsión Social (Fte 2.01.26)", sec: "IMPS", gasto: "Financiamiento de la caja de jubilaciones municipales", propuesta: "Compensar con optimización de aportes patronales." },
-            { cat: "SELLADOS", art: "Art. 107", tasa: "Derecho de Oficina por Habilitación y Viabilidad Comercial", cod: "11.01.02.05.00", monto: "$ 180 M (estimado)", fondo: "Libre Disponibilidad", sec: "Gobierno / Producción", gasto: "Estructura administrativa de la Ventanilla Única de Habilitaciones", propuesta: "Habilitación comercial inmediata y costo $0 para comercios y pymes." },
-
-            // OBRAS, PLANOS Y MEDIDORES
-            { cat: "OBRAS", art: "Art. 59", tasa: "Tasa Contralor e Inspección de Medidores (Luz y Gas)", cod: "11.01.02.02.02", monto: "$ 1.837 M", fondo: "FMOP - Pavimentos (Fte 2.01.50)", sec: "Obras Públicas", gasto: "Pavimentación y mantenimiento de calzadas (Inciso 3)", propuesta: "Derogación inmediata. Quitar recargos municipales en boletas de luz y gas." },
+            { cat: "SELLADOS", art: "Arts. 97 a 110", tasa: "Sellados Administrativos - Fondo Garantías Transporte", cod: "11.01.02.05.05", monto: "$ 460 M", fondo: "Fondo Garantías Sistema de Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Garantías y contingencias operativas de movilidad", propuesta: "Eliminación de la tasa accesoria en trámites administrativos." },
+            { cat: "SELLADOS", art: "Arts. 97 a 110", tasa: "Sellados Administrativos - Aporte al IMPS", cod: "11.01.02.05.03", monto: "$ 501 M", fondo: "Instituto Municipal de Previsión Social (Fte 2.01.26)", sec: "IMPS", gasto: "Financiamiento de la caja de jubilaciones municipales", propuesta: "Compensar con optimización de aportes patronales." },
+            { cat: "SELLADOS", art: "Art. 107 OGI", tasa: "Derecho de Oficina por Habilitación y Viabilidad Comercial", cod: "11.01.02.05.00", monto: "$ 180 M (estimado)", fondo: "Libre Disponibilidad", sec: "Gobierno / Producción", gasto: "Estructura administrativa de la Ventanilla Única de Habilitaciones", propuesta: "Habilitación comercial inmediata y costo $0 para comercios y pymes." },
+            { cat: "OBRAS", art: "Art. 59 OGI", tasa: "Tasa Contralor e Inspección de Medidores (Luz y Gas)", cod: "11.01.02.02.02", monto: "$ 1.837 M", fondo: "FMOP - Pavimentos (Fte 2.01.50)", sec: "Obras Públicas", gasto: "Pavimentación y mantenimiento de calzadas (Inciso 3)", propuesta: "Derogación inmediata. Quitar recargos municipales en boletas de luz y gas." },
             { cat: "OBRAS", art: "Arts. 60 y 61", tasa: "Tasa Servicios Técnicos y Revisión de Planos de Obra", cod: "11.01.02.03.01", monto: "$ 792 M", fondo: "Libre Disponibilidad", sec: "Planeamiento", gasto: "Funcionamiento de la Dirección de Obras Particulares", propuesta: "Exención a construcciones residenciales y proyectos de pymes locales." },
-            { cat: "OBRAS", art: "Art. 58", tasa: "Derecho Contralor e Inspección sobre Obras Públicas", cod: "11.01.04.07.00", monto: "$ 250 M", fondo: "Libre Disponibilidad", sec: "Obras Públicas", gasto: "Fiscalización técnica de calzadas y veredas", propuesta: "Simplificar la verificación e integrarla al costo de licitación." },
+            { cat: "OBRAS", art: "Art. 58 OGI", tasa: "Derecho Contralor e Inspección sobre Obras Públicas", cod: "11.01.04.07.00", monto: "$ 250 M", fondo: "Libre Disponibilidad", sec: "Obras Públicas", gasto: "Fiscalización técnica de calzadas y veredas", propuesta: "Simplificar la verificación e integrarla al costo de licitación." },
             { cat: "OBRAS", art: "Arts. 67 bis y 68", tasa: "Tasa por Factibilidad y Control de Antenas Telecom.", cod: "11.01.02.06.01/02", monto: "$ 232 M", fondo: "Libre Disponibilidad", sec: "Gobierno / Planeamiento", gasto: "Inspecciones de radiobases y estructuras soporte", propuesta: "Simplificar habilitaciones para acelerar el despliegue de conectividad 5G." },
-
-            // COMERCIO Y ESPACIO PÚBLICO
             { cat: "COMERCIO", art: "Arts. 12 b/c y 64", tasa: "Derechos Publicitarios (Carteles y Marquesinas)", cod: "11.01.04.10.00", monto: "$ 15,7 M", fondo: "Libre Disponibilidad", sec: "Hacienda / Control", gasto: "Rentas Generales", propuesta: "Eliminación total para comercios barriales y pymes. Costo fiscal marginal." },
             { cat: "COMERCIO", art: "Arts. 12 a, 37 y 42", tasa: "Derecho Ocupación Dominio Público (Mesas, Sillas, Kioscos)", cod: "11.01.04.05.01", monto: "$ 343 M", fondo: "Libre Disponibilidad", sec: "Control y Convivencia", gasto: "Inspección de ocupación en aceras y paseos", propuesta: "Exención a bares y locales gastronómicos para impulsar el empleo nocturno." },
             { cat: "COMERCIO", art: "Arts. 30 a 33", tasa: "Derecho Acceso a Diversiones y Espectáculos Públicos", cod: "11.01.04.03.03", monto: "$ 2.250 M", fondo: "Fondo Transporte ($1.605 M) y Discapacidad ($270 M)", sec: "Movilidad / Cultura", gasto: "Subsidios al transporte y programas de inclusión", propuesta: "Bajar la alícuota del 1% a recitales y teatros para reactivar la cartelera." },
             { cat: "COMERCIO", art: "Art. 12 ter (ETUR)", tasa: "Contribución Especial de Turismo (ETUR)", cod: "11.01.04.09.05", monto: "$ 1.947 M", fondo: "Fondo Contribución ETUR (Fte 2.01.28)", sec: "Deporte y Turismo", gasto: "Promoción turística y eventos de la Subsecretaría", propuesta: "Absorber con reducción de gastos de protocolo y eventos de la Secretaría." },
             { cat: "COMERCIO", art: "Arts. 48 a 52", tasa: "Permiso de Uso Plataforma y Boleterías Terminal Ómnibus", cod: "11.01.04.08.01", monto: "$ 1.058 M", fondo: "Libre Disponibilidad", sec: "Movilidad / Terminal", gasto: "Mantenimiento operativo de la Estación Mariano Moreno", propuesta: "Revisar tasas de toque de dársena para abaratar pasajes interurbanos." },
-
-            // CEMENTERIOS
             { cat: "CEMENTERIO", art: "Arts. 14 y 15 (Gral)", tasa: "Derechos de Cementerios (Inhumación, Nichos, Cremación)", cod: "11.01.04.02.01", monto: "$ 233 M", fondo: "Libre Disponibilidad", sec: "Ambiente y Espacio Público", gasto: "Operatividad de cementerios La Piedad y El Salvador", propuesta: "Digitalización de trámites y exención en tasas de traslado a familias vulnerables." },
             { cat: "CEMENTERIO", art: "Art. 14 (Nichos)", tasa: "Derechos de Cementerios - Fondo Municipal para Nichos", cod: "11.01.04.02.02", monto: "$ 118,5 M", fondo: "Fondo Municipal Para Nichos (Fte 2.01.10)", sec: "Ambiente y Espacio Público", gasto: "Construcción y refacción de galerías y nichos", propuesta: "Financiar con mantenimiento ordinario de la secretaría." },
             { cat: "CEMENTERIO", art: "Art. 14 (Fúnebres)", tasa: "Derechos de Cementerios - Fondo Servicios Fúnebres Gratuitos", cod: "11.01.04.02.03", monto: "$ 118,6 M", fondo: "Fondo Servicios Fúnebres Gratuitos (Fte 2.01.48)", sec: "Ambiente / Desarrollo Humano", gasto: "Cobertura de servicios de sepelio social", propuesta: "Sostener la prestación social absorbiendo costos de administración." },
-
-            // TRÁNSITO Y MULTAS
-            { cat: "TRANSITO", art: "Art. 83 y CTM (Libre)", tasa: "Multas por Infracciones de Tránsito (Libre Disponibilidad)", cod: "12.06.01.01.00", monto: "$ 11.329 M", fondo: "Libre Disponibilidad", sec: "Control / Tribunal de Faltas", gasto: "Funcionamiento del Tribunal de Faltas y Dirección de Tránsito", propuesta: "Mayor foco en seguridad vial preventiva y no en fines recaudatorios." },
-            { cat: "TRANSITO", art: "Art. 83 y CTM (TUP)", tasa: "Multas por Infracciones de Tránsito - Fondo Transporte", cod: "12.06.01.08.00", monto: "$ 6.225 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios al Transporte Urbano de Pasajeros", propuesta: "Desafectar multas de tránsito para evitar incentivos perversos de recaudación." },
-            { cat: "TRANSITO", art: "Art. 83 y CTM (Garantías)", tasa: "Multas de Tránsito - Fondo Garantías Transporte", cod: "12.06.01.22.00", monto: "$ 691 M", fondo: "Fondo Garantías Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Fondo de contingencia del sistema de movilidad", propuesta: "Unificar criterios de juzgamiento de faltas viales." },
-            { cat: "TRANSITO", art: "Art. 82 y 83", tasa: "Tarifas por Acarreo de Grúa y Estadía en Corralón", cod: "1.04.02.00.00", monto: "$ 890 M (estimado)", fondo: "Libre Disponibilidad", sec: "Control y Convivencia", gasto: "Contrato de servicio de grúas y mantenimiento de corralón", propuesta: "Eliminar el cobro de acarreo en casos donde la infracción no generó riesgo vial grave." },
+            { cat: "TRANSITO", art: "Art. 83 y CTM", tasa: "Multas por Infracciones de Tránsito (Libre Disponibilidad)", cod: "12.06.01.01.00", monto: "$ 11.329 M", fondo: "Libre Disponibilidad", sec: "Control / Tribunal de Faltas", gasto: "Funcionamiento del Tribunal de Faltas y Dirección de Tránsito", propuesta: "Mayor foco en seguridad vial preventiva y no en fines recaudatorios." },
+            { cat: "TRANSITO", art: "Art. 83 y CTM", tasa: "Multas por Infracciones de Tránsito - Fondo Transporte", cod: "12.06.01.08.00", monto: "$ 6.225 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios al Transporte Urbano de Pasajeros", propuesta: "Desafectar multas de tránsito para evitar incentivos perversos de recaudación." },
+            { cat: "TRANSITO", art: "Art. 83 y CTM", tasa: "Multas de Tránsito - Fondo Garantías Transporte", cod: "12.06.01.22.00", monto: "$ 691 M", fondo: "Fondo Garantías Transporte (Fte 2.01.51)", sec: "Movilidad", gasto: "Fondo de contingencia del sistema de movilidad", propuesta: "Unificar criterios de juzgamiento de faltas viales." },
+            { cat: "TRANSITO", art: "Arts. 82 y 83", tasa: "Tarifas por Acarreo de Grúa y Estadía en Corralón", cod: "1.04.02.00.00", monto: "$ 890 M (estimado)", fondo: "Libre Disponibilidad", sec: "Control y Convivencia", gasto: "Contrato de servicio de grúas y mantenimiento de corralón", propuesta: "Eliminar el cobro de acarreo en casos donde la infracción no generó riesgo vial grave." },
             { cat: "TRANSITO", art: "Estacionamiento", tasa: "Tarifa Adicional Estacionamiento Medido - Fondo Transporte", cod: "12.08.09.01.00", monto: "$ 1.362 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios al sistema de colectivos", propuesta: "Revisar la tarifa del estacionamiento en áreas comerciales barriales." },
-
-            // SERVICIOS PÚBLICOS
-            { cat: "SERVICIOS", art: "Art. 57", tasa: "Derecho Fiscalización Concesionarios de Servicios Públicos", cod: "11.01.04.06.01", monto: "$ 1.555 M", fondo: "Libre Disponibilidad", sec: "Movilidad / Servicios Públicos", gasto: "Auditoría de contratos de concesión", propuesta: "Optimizar el costo de control en los pliegos de transporte y residuos." },
+            { cat: "SERVICIOS", art: "Art. 57 OGI", tasa: "Derecho Fiscalización Concesionarios de Servicios Públicos", cod: "11.01.04.06.01", monto: "$ 1.555 M", fondo: "Libre Disponibilidad", sec: "Movilidad / Servicios Públicos", gasto: "Auditoría de contratos de concesión", propuesta: "Optimizar el costo de control en los pliegos de transporte y residuos." },
             { cat: "SERVICIOS", art: "Ley Pcial 7797/75", tasa: "Recargo 6% EPE (Alumbrado Público en Facturas)", cod: "11.01.05.02.01", monto: "$ 15.385 M", fondo: "Libre Disponibilidad", sec: "Hacienda / Ambiente", gasto: "Pago de la factura mayorista de alumbrado público a la EPE", propuesta: "Compensar con el ahorro de energía derivado del 100% de luminarias LED." }
         ];
 
-        // 4. Catálogo Completo
         const RECURSOS_COMPLETOS = [
-            { cod: "1.01.04.01.00", art: "Arts. 7 a 13", nom: "Derecho de Registro e Inspección (DReI Total)", monto: "$ 259.891.121.000", tipo: "Derecho Actividad", fte: "Mixta (Libre Disp. $228.741 M + Afectados $31.149 M)" },
-            { cod: "11.01.03.01.01", art: "Art. 7", nom: "  • DReI Libre Disponibilidad (Rentas Generales)", monto: "$ 228.741.644.000", tipo: "DReI Puro", fte: "Libre Disponibilidad" },
-            { cod: "11.01.03.01.06", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Compensador Sistema de Transporte", monto: "$ 14.732.047.000", tipo: "Sobretasa DReI", fte: "Afectación Específica (Transporte)" },
-            { cod: "11.01.03.01.02", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Insumos Para la Salud", monto: "$ 12.986.501.000", tipo: "Sobretasa DReI", fte: "Afectación Específica (Salud)" },
-            { cod: "11.01.03.01.03", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Discapacitados", monto: "$ 1.755.275.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
-            { cod: "11.01.03.01.07", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Garantías Sistema de Transporte", monto: "$ 1.636.895.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
-            { cod: "11.01.03.01.05", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Atención al Menor y la Familia", monto: "$ 38.759.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
-            { cod: "1.01.03.01.00", art: "Arts. 1 a 6", nom: "Tasa General de Inmuebles (TGI Total)", monto: "$ 122.650.961.000", tipo: "Tasa Inmobiliaria", fte: "Mixta (Libre Disp. $90.114 M + Fondos $32.536 M)" },
-            { cod: "11.01.02.01.01", art: "Art. 1", nom: "  • TGI Libre Disponibilidad", monto: "$ 90.114.028.000", tipo: "TGI Pura", fte: "Libre Disponibilidad" },
-            { cod: "11.01.02.01.04", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Solidario Emergencia Salud", monto: "$ 12.727.906.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.03", art: "Art. 1 (Fdo)", nom: "  • TGI - FMOP Fondo de Desagües Pluviales", monto: "$ 11.600.166.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.02", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Municipal de Obras Públicas", monto: "$ 5.327.591.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.08", art: "Art. 1 (Fdo)", nom: "  • TGI - PROMUSIDA", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.09", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Emergencia Salud", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.06", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Municipal de Forestación", monto: "$ 454.877.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.05", art: "Art. 1 (Fdo)", nom: "  • TGI - Contribución Alumbrado Público", monto: "$ 302.369.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "11.01.02.01.07", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Preservación Urbanística", monto: "$ 191.089.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
-            { cod: "1.01.03.04.07", art: "Art. 96 ter", nom: "Tasa por Mantenimiento de Vías Urbanas (Combustibles)", monto: "$ 5.779.031.000", tipo: "Tasa Vial", fte: "Afectación Específica (FMOP Vías Urbanas)" },
-            { cod: "1.01.03.05.00", art: "Arts. 97 a 110", nom: "Tasa de Actuaciones Administrativas (Sellados)", monto: "$ 6.613.351.000", tipo: "Sellados", fte: "Fdo. Transporte ($4.145 M), LD ($1.505 M), IMPS ($501 M)" },
-            { cod: "1.01.03.02.00", art: "Art. 59", nom: "Tasa de Contralor e Inspección de Medidores", monto: "$ 1.837.876.000", tipo: "Tasa Servicios", fte: "Afectación Específica (FMOP Pavimentos)" },
-            { cod: "1.01.03.03.00", art: "Arts. 60 y 61", nom: "Tasa Servicios Técnicos y Revisión de Planos", monto: "$ 792.177.000", tipo: "Tasa Obras", fte: "Libre Disponibilidad" },
-            { cod: "1.01.04.03.00", art: "Arts. 30 a 33", nom: "Derecho Diversiones y Espectáculos Públicos", monto: "$ 2.250.415.000", tipo: "Derecho", fte: "Transporte ($1.605 M), Discapacitados ($270 M)" },
-            { cod: "1.01.04.05.00", art: "Arts. 37 y 42", nom: "Derecho de Ocupación del Dominio Público", monto: "$ 364.513.000", tipo: "Derecho Espacio", fte: "LD ($343 M), Salud ($15 M)" },
-            { cod: "1.01.04.10.00", art: "Art. 64", nom: "Derechos Publicitarios (Carteles)", monto: "$ 15.750.000", tipo: "Derecho Publicidad", fte: "Libre Disponibilidad" },
-            { cod: "1.01.04.06.00", art: "Art. 57", nom: "Derecho Fiscalización Concesionarios Servicios", monto: "$ 1.555.483.000", tipo: "Derecho Fiscaliz.", fte: "Libre Disponibilidad" },
-            { cod: "1.01.04.07.00", art: "Art. 58", nom: "Derecho Contralor e Inspección Obras Públicas", monto: "$ 250.196.000", tipo: "Derecho Obras", fte: "Libre Disponibilidad" },
-            { cod: "1.01.04.09.05", art: "Art. 12 ter", nom: "Contribución ETUR (Ente de Turismo)", monto: "$ 1.947.756.000", tipo: "Derecho Turismo", fte: "Afectado ETUR" },
-            { cod: "1.01.04.02.00", art: "Arts. 14 y 15", nom: "Derechos de Cementerios", monto: "$ 470.851.000", tipo: "Derecho", fte: "LD ($233 M), Nichos ($118 M), Fúnebres ($118 M)" },
+            { cod: "1.01.04.01.00", art: "Arts. 7 y 8 OGI", nom: "Derecho de Registro e Inspección (DReI Total)", monto: "$ 259.891.121.000", tipo: "Derecho Actividad", fte: "Mixta (Libre Disp. $228.741 M + Afectados $31.149 M)" },
+            { cod: "11.01.03.01.01", art: "Arts. 7 y 8 OGI", nom: "  • DReI Libre Disponibilidad (Alícuota General y Diferenciales)", monto: "$ 228.741.644.000", tipo: "DReI Puro", fte: "Libre Disponibilidad (Rentas Generales)" },
+            { cod: "11.01.03.01.06", art: "Ord. 7099/01", nom: "  • DReI - Fondo Compensador Sistema de Transporte", monto: "$ 14.732.047.000", tipo: "Afectación DReI", fte: "Afectación Específica (Transporte)" },
+            { cod: "11.01.03.01.02", art: "Ord. Salud / CTM", nom: "  • DReI - Fondo Insumos Para la Salud", monto: "$ 12.986.501.000", tipo: "Afectación DReI", fte: "Afectación Específica (Salud)" },
+            { cod: "11.01.03.01.03", art: "Ord. 9524", nom: "  • DReI - Fondo Discapacitados", monto: "$ 1.755.275.000", tipo: "Afectación DReI", fte: "Afectación Específica" },
+            { cod: "11.01.03.01.07", art: "Ord. 7099/01", nom: "  • DReI - Fondo Garantías Sistema de Transporte", monto: "$ 1.636.895.000", tipo: "Afectación DReI", fte: "Afectación Específica" },
+            { cod: "11.01.03.01.05", art: "Ord. Social", nom: "  • DReI - Fondo Atención al Menor y la Familia", monto: "$ 38.759.000", tipo: "Afectación DReI", fte: "Afectación Específica" },
+            { cod: "1.01.03.01.00", art: "Arts. 1 a 6 OGI", nom: "Tasa General de Inmuebles (TGI Total)", monto: "$ 122.650.961.000", tipo: "Tasa Inmobiliaria", fte: "Mixta (Libre Disp. $90.114 M + Fondos $32.536 M)" },
+            { cod: "11.01.02.01.01", art: "Art. 1 OGI", nom: "  • TGI Libre Disponibilidad", monto: "$ 90.114.028.000", tipo: "TGI Pura", fte: "Libre Disponibilidad" },
+            { cod: "11.01.02.01.04", art: "Art. 1 OGI", nom: "  • TGI - Fondo Solidario Emergencia Salud", monto: "$ 12.727.906.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.03", art: "Art. 1 OGI", nom: "  • TGI - FMOP Fondo de Desagües Pluviales", monto: "$ 11.600.166.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.02", art: "Art. 1 OGI", nom: "  • TGI - Fondo Municipal de Obras Públicas", monto: "$ 5.327.591.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.08", art: "Art. 1 OGI", nom: "  • TGI - PROMUSIDA", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.09", art: "Art. 1 OGI", nom: "  • TGI - Fondo Emergencia Salud", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.06", art: "Art. 1 OGI", nom: "  • TGI - Fondo Municipal de Forestación", monto: "$ 454.877.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.05", art: "Art. 1 OGI", nom: "  • TGI - Contribución Alumbrado Público", monto: "$ 302.369.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.07", art: "Art. 1 OGI", nom: "  • TGI - Fondo Preservación Urbanística", monto: "$ 191.089.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "1.01.03.04.07", art: "Art. 96 ter OGI", nom: "Tasa por Mantenimiento de Vías Urbanas (Combustibles)", monto: "$ 5.779.031.000", tipo: "Tasa Vial", fte: "Afectación Específica (FMOP Vías Urbanas)" },
+            { cod: "1.01.03.05.00", art: "Arts. 97 a 110 OGI", nom: "Tasa de Actuaciones Administrativas (Sellados)", monto: "$ 6.613.351.000", tipo: "Sellados", fte: "Fdo. Transporte ($4.145 M), LD ($1.505 M), IMPS ($501 M)" },
+            { cod: "1.01.03.02.00", art: "Art. 59 OGI", nom: "Tasa de Contralor e Inspección de Medidores", monto: "$ 1.837.876.000", tipo: "Tasa Servicios", fte: "Afectación Específica (FMOP Pavimentos)" },
+            { cod: "1.01.03.03.00", art: "Arts. 60 y 61 OGI", nom: "Tasa Servicios Técnicos y Revisión de Planos", monto: "$ 792.177.000", tipo: "Tasa Obras", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.03.00", art: "Arts. 30 a 33 OGI", nom: "Derecho Diversiones y Espectáculos Públicos", monto: "$ 2.250.415.000", tipo: "Derecho", fte: "Transporte ($1.605 M), Discapacitados ($270 M)" },
+            { cod: "1.01.04.05.00", art: "Arts. 37 y 42 OGI", nom: "Derecho de Ocupación del Dominio Público", monto: "$ 364.513.000", tipo: "Derecho Espacio", fte: "LD ($343 M), Salud ($15 M)" },
+            { cod: "1.01.04.10.00", art: "Art. 64 OGI", nom: "Derechos Publicitarios (Carteles)", monto: "$ 15.750.000", tipo: "Derecho Publicidad", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.06.00", art: "Art. 57 OGI", nom: "Derecho Fiscalización Concesionarios Servicios", monto: "$ 1.555.483.000", tipo: "Derecho Fiscaliz.", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.07.00", art: "Art. 58 OGI", nom: "Derecho Contralor e Inspección Obras Públicas", monto: "$ 250.196.000", tipo: "Derecho Obras", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.09.05", art: "Art. 12 ter OGI", nom: "Contribución ETUR (Ente de Turismo)", monto: "$ 1.947.756.000", tipo: "Derecho Turismo", fte: "Afectado ETUR" },
+            { cod: "1.01.04.02.00", art: "Arts. 14 y 15 OGI", nom: "Derechos de Cementerios", monto: "$ 470.851.000", tipo: "Derecho", fte: "LD ($233 M), Nichos ($118 M), Fúnebres ($118 M)" },
             { cod: "1.01.05.02.00", art: "Ley 7797/75", nom: "EPE 6% Alumbrado Público", monto: "$ 15.385.633.000", tipo: "Recargo Tarifa", fte: "Libre Disponibilidad" },
             { cod: "1.03.06.01.00", art: "Art. 83 y CTM", nom: "Multas por Infracciones de Tránsito", monto: "$ 20.301.438.000", tipo: "Multas", fte: "LD ($11.329 M), Fdo. Transporte ($6.225 M), ACARA ($1.431 M)" },
             { cod: "1.03.08.09.00", art: "Estacionamiento", nom: "Tarifa Adicional Estacionamiento Medido", monto: "$ 1.514.134.000", tipo: "Tarifa", fte: "Fdo. Transporte ($1.362 M), Garantías ($151 M)" }
@@ -1266,12 +1231,10 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
             document.getElementById('res-ahorro-adic').innerText = `$ ${ahorroAdic.toFixed(1)} M`;
             document.getElementById('total-ahorro-disp').innerText = `$ ${totalAhorro.toFixed(1)} M`;
 
-            // Costo DReI
             const dreiPct = parseFloat(document.getElementById('drei-reduction-pct').value);
             const costoDrei = (228741.64 * dreiPct) / 100;
             document.getElementById('costo-drei').innerText = `$ ${costoDrei.toFixed(1)} M`;
 
-            // Costo Otras Tasas
             let costoOtrasTasas = 0;
             let tasasMarcadas = [];
             document.querySelectorAll('#taxes-checklist input[type=checkbox]:checked').forEach(cb => {
@@ -1284,7 +1247,6 @@ Configurá tu propuesta en el simulador para generar automáticamente la fundame
             const totalAlivio = costoDrei + costoOtrasTasas;
             document.getElementById('total-costo-alivio').innerText = `$ ${totalAlivio.toFixed(1)} M`;
 
-            // Balance
             const balance = totalAhorro - totalAlivio;
             const banner = document.getElementById('balance-banner');
 
