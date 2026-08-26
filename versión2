@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Control Presupuestario & Reforma Tributaria Rosario 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--primary-dark);
+        }
+
+        .grid-kpi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            background: var(--card);
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-card .title {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 4px 0;
+        }
+
+        .kpi-card .sub {
+            font-size: 0.72rem;
+            color: var(--accent);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--card-hover);
+            color: var(--text-main);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .sim-container {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1050px) {
+            .sim-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .card h2 {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .presets-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .preset-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-dark);
+            color: #fff;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px;
+            margin-bottom: 12px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 6px 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        .scrollable-sliders {
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .slider-group {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            margin-bottom: 4px;
+        }
+
+        .slider-header span:first-child {
+            font-weight: 600;
+        }
+
+        .slider-val {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            accent-color: var(--primary);
+        }
+
+        .drei-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 14px;
+        }
+
+        .drei-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .drei-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .drei-select {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .result-box {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed var(--border);
+            font-size: 0.82rem;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .check-item:hover {
+            border-color: var(--primary);
+        }
+
+        .check-item input[type=checkbox] {
+            accent-color: var(--danger);
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .check-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 8px;
+            flex-grow: 1;
+        }
+
+        .check-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .check-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .check-amount {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: #fca5a5;
+            text-align: right;
+            white-space: nowrap;
+            margin-left: 6px;
+        }
+
+        .balance-card {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            margin-top: 12px;
+            font-size: 0.88rem;
+        }
+
+        .balance-ok {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--success);
+            color: #86efac;
+        }
+
+        .balance-deficit {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+        }
+
+        .dictamen-box {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+        .tag-red { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .tag-green { background: rgba(16, 185, 129, 0.2); color: #86efac; }
+        .tag-yellow { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
+        .tag-blue { background: rgba(56, 189, 248, 0.2); color: #bae6fd; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin-top: 8px;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--primary);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tr:hover {
+            background-color: var(--card-hover);
+        }
+
+        .amount {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .search-box:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 260px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Presupuesto & OGI 2026 - Control Fiscal Rosario</h1>
+            <p>Plataforma Parlamentaria de Análisis de Gastos, Trazabilidad de Tasas y Simulación de Ahorro</p>
+        </div>
+        <div>
+            <span class="badge">Presupuesto & OGI Vigentes</span>
+        </div>
+    </div>
+
+    <!-- KPIs Principales -->
+    <div class="grid-kpi">
+        <div class="kpi-card">
+            <span class="title">Total Presupuesto General</span>
+            <span class="value">$ 1.201.259 M</span>
+            <span class="sub">Adm. Central: $1.159.144 M</span>
+        </div>
+        <div class="kpi-card">
+            <span class="title">DReI Total Proyectado</span>
+            <span class="value">$ 259.891 M</span>
+            <span class="sub">Puro: $228.741 M | Afectado: $31.149 M</span>
+        </div>
+        <div class="kpi-card">
+            <span class="title">TGI Total (Inmobiliario)</span>
+            <span class="value">$ 122.650 M</span>
+            <span class="sub">Pura: $90.114 M | Sobretasas: $32.536 M</span>
+        </div>
+        <div class="kpi-card">
+            <span class="title">Tasa Vial Combustibles (OGI 96 ter)</span>
+            <span class="value">$ 5.779 M</span>
+            <span class="sub">Fondo Mantenimiento Vías Urbanas</span>
+        </div>
+        <div class="kpi-card">
+            <span class="title">Servicios No Personales (Inc. 3)</span>
+            <span class="value">$ 334.973 M</span>
+            <span class="sub">Principal partida de ajuste operativo</span>
+        </div>
+    </div>
+
+    <!-- Navegación de Pestañas -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="openTab('tab-simulador')">⚡ Simulador de Recortes & Tasas</button>
+        <button class="tab-btn" onclick="openTab('tab-trazabilidad')">🔗 Matriz de Trazabilidad (OGI ↔ Gasto)</button>
+        <button class="tab-btn" onclick="openTab('tab-paquetes')">📦 Proyectos de Reforma Preconfigurados</button>
+        <button class="tab-btn" onclick="openTab('tab-gastos')">📊 Gastos por Inciso & Secretaría</button>
+        <button class="tab-btn" onclick="openTab('tab-tasas')">📑 Catálogo Completo de Recursos</button>
+    </div>
+
+    <!-- TAB 1: SIMULADOR -->
+    <div id="tab-simulador" class="tab-content active">
+        
+        <!-- Presets rápidos -->
+        <div class="presets-bar">
+            <span style="font-size: 0.75rem; color: var(--accent); font-weight: 700; align-self: center;">Cargar Escenarios Rápidos:</span>
+            <button class="preset-btn" onclick="applyPreset('cero-sellados')">📄 Cero Sellados y Trámites</button>
+            <button class="preset-btn" onclick="applyPreset('fin-tasa-vial')">⛽ Derogación Tasa Vial</button>
+            <button class="preset-btn" onclick="applyPreset('alivio-pyme')">🏪 Alivio Pymes y Comercios</button>
+            <button class="preset-btn" onclick="applyPreset('poda-sobretasas-tgi')">🏠 Supresión Sobretasas TGI</button>
+            <button class="preset-btn" onclick="applyPreset('shock-total')">💥 Shock Integral de Baja Fiscal</button>
+            <button class="preset-btn" style="color: #fca5a5;" onclick="applyPreset('reset')">🔄 Restablecer</button>
+        </div>
+
+        <div class="sim-container">
+            
+            <!-- Columna Izquierda: Aplicar Recortes -->
+            <div class="card">
+                <h2>1. Aplicar Recortes en el Gasto <span class="tag tag-green">Ahorro Fiscal</span></h2>
+                
+                <div class="mode-toggle">
+                    <button id="btn-mode-sec" class="mode-btn active" onclick="setRecorteMode('secretarias')">🏛️ Recorte por Secretaría</button>
+                    <button id="btn-mode-inc" class="mode-btn" onclick="setRecorteMode('incisos')">📦 Recorte Global por Inciso</button>
+                </div>
+
+                <!-- VISTA 1: POR SECRETARÍA -->
+                <div id="view-secretarias" class="scrollable-sliders">
+                    <!-- Generado dinámicamente -->
+                </div>
+
+                <!-- VISTA 2: POR INCISO GLOBAL -->
+                <div id="view-incisos" class="scrollable-sliders" style="display: none;">
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>Servicios No Personales (Inc. 3 - $334.973 M)</span>
+                            <span class="slider-val" id="val-global-inc3">0% ($ 0 M)</span>
+                        </div>
+                        <input type="range" id="slide-global-inc3" min="0" max="15" value="0" step="0.5" oninput="updateSimulation()">
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Consultorías, alquileres, eventos, contratos tercerizados de mantenimiento</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>Bienes de Consumo (Inc. 2 - $92.701 M)</span>
+                            <span class="slider-val" id="val-global-inc2">0% ($ 0 M)</span>
+                        </div>
+                        <input type="range" id="slide-global-inc2" min="0" max="15" value="0" step="0.5" oninput="updateSimulation()">
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Papelería, suministros de oficina, combustibles de administración</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>Crédito Adicional (Inc. 11 - $17.720 M)</span>
+                            <span class="slider-val" id="val-global-inc11">0% ($ 0 M)</span>
+                        </div>
+                        <input type="range" id="slide-global-inc11" min="0" max="100" value="0" step="5" oninput="updateSimulation()">
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Partida discrecional de libre reasignación del Ejecutivo</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>Eficiencia en Transferencias (Inc. 5 - $116.683 M)</span>
+                            <span class="slider-val" id="val-global-inc5">0% ($ 0 M)</span>
+                        </div>
+                        <input type="range" id="slide-global-inc5" min="0" max="10" value="0" step="0.5" oninput="updateSimulation()">
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Aportes y transferencias no asistenciales</span>
+                    </div>
+                </div>
+
+                <!-- Resumen de Ahorro -->
+                <div class="result-box">
+                    <div class="result-row">
+                        <span>Ahorro en Servicios No Personales / Operativo:</span>
+                        <strong id="res-ahorro-servicios">$ 0 M</strong>
+                    </div>
+                    <div class="result-row">
+                        <span>Ahorro en Suministros y Bienes:</span>
+                        <strong id="res-ahorro-bienes">$ 0 M</strong>
+                    </div>
+                    <div class="result-row">
+                        <span>Ahorro en Crédito Adicional:</span>
+                        <strong id="res-ahorro-adic">$ 0 M</strong>
+                    </div>
+                    <div class="result-row" style="font-size: 0.95rem; color: var(--success); font-weight: 700; margin-top: 4px;">
+                        <span>TOTAL AHORRO FISCAL GENERADO:</span>
+                        <strong id="total-ahorro-disp">$ 0 M</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Tasas y DReI a Derogar / Reducir -->
+            <div class="card">
+                <h2>2. Alivio Tributario (OGI & Presupuesto) <span class="tag tag-red">Costo Fiscal</span></h2>
+                
+                <!-- BLOQUE ESPECIAL DReI -->
+                <div class="drei-box">
+                    <div class="drei-header">
+                        <span class="drei-title">💼 DReI Alícuota General (Base Libre: $228.741 M)</span>
+                        <select id="drei-reduction-pct" class="drei-select" onchange="updateSimulation()">
+                            <option value="0">0% (Sin reducción)</option>
+                            <option value="5">Bajar Alícuota 5% (-$11.437 M)</option>
+                            <option value="10">Bajar Alícuota 10% (-$22.874 M)</option>
+                            <option value="15">Bajar Alícuota 15% (-$34.311 M)</option>
+                            <option value="20">Bajar Alícuota 20% (-$45.748 M)</option>
+                            <option value="30">Bajar Alícuota 30% (-$68.622 M)</option>
+                            <option value="50">Bajar Alícuota 50% (-$114.370 M)</option>
+                        </select>
+                    </div>
+                    <p style="font-size: 0.72rem; color: var(--text-muted);">
+                        Arts. 7 y 8 OGI. Alícuota básica 6,5‰. Reduce costos fijos a comerciantes, bares y talleres de Rosario.
+                    </p>
+                </div>
+
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">
+                    Marcá las tasas, sellados o sobretasas que el proyecto derogará:
+                </p>
+
+                <!-- CHECKLIST DE TASAS Y FONDOS -->
+                <div id="taxes-checklist" class="scrollable-sliders" style="max-height: 360px;">
+                    <!-- Generado dinámicamente -->
+                </div>
+
+                <!-- Resumen de Costo y Balance -->
+                <div class="result-box">
+                    <div class="result-row">
+                        <span>Costo de Rebaja en DReI:</span>
+                        <strong id="costo-drei" style="color: #fca5a5;">$ 0 M</strong>
+                    </div>
+                    <div class="result-row">
+                        <span>Costo de Tasas y Sobretasas marcadas:</span>
+                        <strong id="costo-otras-tasas" style="color: #fca5a5;">$ 0 M</strong>
+                    </div>
+                    <div class="result-row" style="font-size: 0.95rem; color: #fca5a5; font-weight: 700; margin-top: 4px;">
+                        <span>TOTAL ALIVIO TRIBUTARIO PROPUESTO:</span>
+                        <strong id="total-costo-alivio">$ 0 M</strong>
+                    </div>
+                </div>
+
+                <!-- Banner de Viabilidad -->
+                <div id="balance-banner" class="balance-card balance-ok">
+                    Ajustá los recortes y marcá tributos para evaluar el balance fiscal.
+                </div>
+
+                <!-- Generador de Dictamen Legislativo -->
+                <div style="margin-top: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">📝 Minuta Técnica para Proyecto de Ordenanza</span>
+                        <button class="preset-btn" onclick="copyDictamen()">📋 Copiar Texto</button>
+                    </div>
+                    <div id="dictamen-text" class="dictamen-box">
+Configurá tu propuesta en el simulador para generar automáticamente la fundamentación con números consolidados.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TAB 2: TRAZABILIDAD -->
+    <div id="tab-trazabilidad" class="tab-content">
+        <div class="card">
+            <h2>Matriz de Trazabilidad Completa: OGI ↔ Cuentas Afectadas ↔ Gastos Presupuestarios</h2>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+                Mapeo de cada tributo regulado en la Ordenanza General Impositiva (Ord. 4064), su recaudación presupuestada 2026, la cuenta de destino y la secretaría que ejecuta el gasto.
+            </p>
+            <input type="text" id="search-trazabilidad" class="search-box" placeholder="Buscar por artículo OGI, nombre de tasa, fondo de afectación o secretaría ejecutora..." onkeyup="filterTrazabilidad()">
+            <div style="overflow-x: auto; max-height: 600px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Art. OGI / Tributo</th>
+                            <th>Código Presup.</th>
+                            <th style="text-align:right;">Monto 2026</th>
+                            <th>Fondo Legal de Afectación</th>
+                            <th>Secretaría Ejecutora</th>
+                            <th>Partida de Gasto Financiada</th>
+                            <th>Propuesta Legislativa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-trazabilidad">
+                        <!-- Llenado dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: PAQUETES PRECONFIGURADOS -->
+    <div id="tab-paquetes" class="tab-content">
+        <div class="panel-grid">
+            <div class="card">
+                <h2>1. Paquete "Desburocratización y Cero Sellados"</h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Elimina todos los sellados administrativos cobrados a ciudadanos por iniciar trámites, expedientes, convenios de pago y altas automotores.
+                </p>
+                <ul style="font-size: 0.82rem; margin-left: 18px; margin-bottom: 12px; color: #cbd5e1;">
+                    <li><strong>Deroga:</strong> Arts. 97 a 110 OGI (Tasa de Actuaciones Administrativas).</li>
+                    <li><strong>Alivio Tributario:</strong> <strong>$ 6.613 M</strong>.</li>
+                    <li><strong>Compensación:</strong> 2% de ahorro en Servicios No Personales (Inc. 3) y 25% de baja en Crédito Adicional.</li>
+                </ul>
+                <button class="preset-btn" onclick="applyPreset('cero-sellados'); openTab('tab-simulador');">Cargar en Simulador</button>
+            </div>
+
+            <div class="card">
+                <h2>2. Paquete "Fin de la Tasa Vial a los Combustibles"</h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Deroga el recargo del 1,60% en el surtidor por cada litro de nafta/gasoil y m³ de GNC cargado en estaciones de servicio de Rosario.
+                </p>
+                <ul style="font-size: 0.82rem; margin-left: 18px; margin-bottom: 12px; color: #cbd5e1;">
+                    <li><strong>Deroga:</strong> Arts. 96 ter y 96 quater OGI (Tasa Mantenimiento Vías Urbanas).</li>
+                    <li><strong>Alivio Tributario:</strong> <strong>$ 5.779 M</strong>.</li>
+                    <li><strong>Compensación:</strong> Reducción del 5% en compras operativas y contrataciones de Obras Públicas y Ambiente.</li>
+                </ul>
+                <button class="preset-btn" onclick="applyPreset('fin-tasa-vial'); openTab('tab-simulador');">Cargar en Simulador</button>
+            </div>
+
+            <div class="card">
+                <h2>3. Paquete "Alivio y Fomento Pyme / Comercio"</h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Elimina los derechos que castigan la actividad comercial cotidiana en barrios y centros comerciales a cielo abierto.
+                </p>
+                <ul style="font-size: 0.82rem; margin-left: 18px; margin-bottom: 12px; color: #cbd5e1;">
+                    <li><strong>Deroga:</strong> Derechos Publicitarios (Art. 64), Ocupación con mesas/sillas (Art. 42) y Tasa de Medidores de Luz/Gas (Art. 59).</li>
+                    <li><strong>Alivio Tributario:</strong> <strong>$ 2.218 M</strong>.</li>
+                    <li><strong>Compensación:</strong> Poda del 4% en gastos operativos de Gobierno, Cultura y Desarrollo Económico.</li>
+                </ul>
+                <button class="preset-btn" onclick="applyPreset('alivio-pyme'); openTab('tab-simulador');">Cargar en Simulador</button>
+            </div>
+
+            <div class="card">
+                <h2>4. Paquete "Transparencia en TGI (Fin de Sobretasas)"</h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Limpia la boleta inmobiliaria suprimiendo los recargos accesorios de Forestación, Preservación Patrimonial, Alumbrado e Infraestructura.
+                </p>
+                <ul style="font-size: 0.82rem; margin-left: 18px; margin-bottom: 12px; color: #cbd5e1;">
+                    <li><strong>Deroga:</strong> Sobretasas TGI (Arts. 1 a 3 OGI).</li>
+                    <li><strong>Alivio Tributario:</strong> <strong>$ 2.881 M</strong>.</li>
+                    <li><strong>Compensación:</strong> Ahorro del 3% en servicios de mantenimiento de espacios verdes y arbolado contratados a terceros.</li>
+                </ul>
+                <button class="preset-btn" onclick="applyPreset('poda-sobretasas-tgi'); openTab('tab-simulador');">Cargar en Simulador</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: GASTOS -->
+    <div id="tab-gastos" class="tab-content">
+        <div class="panel-grid">
+            <div class="card">
+                <h2>Gasto por Inciso (Administración Central)</h2>
+                <div class="chart-container">
+                    <canvas id="chartIncisos"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Gasto por Finalidad y Función</h2>
+                <div class="chart-container">
+                    <canvas id="chartFinalidades"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Estructura del Gasto por Inciso - Análisis de Flexibilidad</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Inciso Presupuestario</th>
+                            <th style="text-align:right;">Libre Disponibilidad</th>
+                            <th style="text-align:right;">Afectación Específica</th>
+                            <th style="text-align:right;">Total General</th>
+                            <th>% s/ Total</th>
+                            <th>Margen de Reducción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Inciso 1 - Personal</strong></td>
+                            <td class="amount">$ 414.783.628.000</td>
+                            <td class="amount">$ 1.463.627.000</td>
+                            <td class="amount"><strong>$ 416.247.255.000</strong></td>
+                            <td>35,0%</td>
+                            <td><span class="tag tag-blue">Inflexible (Sueldos)</span></td>
+                        </tr>
+                        <tr style="background: rgba(56, 189, 248, 0.05);">
+                            <td><strong>Inciso 3 - Servicios No Personales</strong></td>
+                            <td class="amount">$ 300.874.992.000</td>
+                            <td class="amount">$ 34.098.837.000</td>
+                            <td class="amount"><strong>$ 334.973.829.000</strong></td>
+                            <td>28,2%</td>
+                            <td><span class="tag tag-green">ALTO (Contrataciones, Alquileres, Eventos)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inciso 4 - Bienes de Uso (Capital)</strong></td>
+                            <td class="amount">$ 17.698.175.000</td>
+                            <td class="amount">$ 110.751.819.000</td>
+                            <td class="amount"><strong>$ 128.449.994.000</strong></td>
+                            <td>10,8%</td>
+                            <td><span class="tag tag-yellow">Medio (Obras públicas)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inciso 5 - Transferencias</strong></td>
+                            <td class="amount">$ 78.434.957.000</td>
+                            <td class="amount">$ 38.248.880.000</td>
+                            <td class="amount"><strong>$ 116.683.837.000</strong></td>
+                            <td>9,8%</td>
+                            <td><span class="tag tag-yellow">Medio (Subsidios operativos)</span></td>
+                        </tr>
+                        <tr style="background: rgba(56, 189, 248, 0.05);">
+                            <td><strong>Inciso 2 - Bienes de Consumo</strong></td>
+                            <td class="amount">$ 69.767.929.000</td>
+                            <td class="amount">$ 22.934.039.000</td>
+                            <td class="amount"><strong>$ 92.701.968.000</strong></td>
+                            <td>7,8%</td>
+                            <td><span class="tag tag-green">ALTO (Insumos, Papelería, Combustible)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inciso 7 - Servicio de Deuda</strong></td>
+                            <td class="amount">$ 52.220.467.000</td>
+                            <td class="amount">$ 0</td>
+                            <td class="amount"><strong>$ 52.220.467.000</strong></td>
+                            <td>4,4%</td>
+                            <td><span class="tag tag-blue">Inflexible (Amortización e Intereses)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inciso 9 - Gastos Figurativos</strong></td>
+                            <td class="amount">$ 24.931.792.000</td>
+                            <td class="amount">$ 3.422.256.000</td>
+                            <td class="amount"><strong>$ 28.354.048.000</strong></td>
+                            <td>2,4%</td>
+                            <td><span class="tag tag-yellow">Aportes a SPVyH e ILAR</span></td>
+                        </tr>
+                        <tr style="background: rgba(245, 158, 11, 0.08);">
+                            <td><strong>Inciso 11 - Crédito Adicional</strong></td>
+                            <td class="amount">$ 17.720.000.000</td>
+                            <td class="amount">$ 0</td>
+                            <td class="amount"><strong>$ 17.720.000.000</strong></td>
+                            <td>1,5%</td>
+                            <td><span class="tag tag-red">MUY ALTO (Discrecional del Ejecutivo)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: CATÁLOGO COMPLETO -->
+    <div id="tab-tasas" class="tab-content">
+        <div class="card">
+            <h2>Nómina Completa de Recursos Tributarios Municipales 2026</h2>
+            <input type="text" id="search-tasas" class="search-box" placeholder="Filtrar por código presupuestario, artículo OGI o concepto..." onkeyup="filterTasas()">
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Art. OGI</th>
+                            <th>Denominación del Recurso</th>
+                            <th style="text-align:right;">Monto Presupuestado 2026</th>
+                            <th>Tipo de Ingreso</th>
+                            <th>Afectación Legal / Destino</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-tasas">
+                        <!-- Llenado dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Secretarías (Gastos Operativos: Inciso 3 + Inciso 2)
+        const SECRETARIAS_DATA = [
+            { id: "sec-ambiente", name: "Ambiente y Espacio Público", gastoOperativo: 142000, desc: "Higiene urbana, recolección de residuos, alumbrado, mantenimiento verde" },
+            { id: "sec-obras", name: "Obras Públicas", gastoOperativo: 76000, desc: "Mantenimiento vial, bacheo, cuadrillas, señalización e infraestructura" },
+            { id: "sec-salud", name: "Salud Pública (Gastos No Asistenciales)", gastoOperativo: 68000, desc: "Servicios generales, logística, soporte y compras no farmacológicas" },
+            { id: "sec-gobierno", name: "Gobierno y Cercanía Ciudadana", gastoOperativo: 31000, desc: "Estructura distrital (CMDs), videovigilancia, comunicación y eventos vecinales" },
+            { id: "sec-cultura", name: "Cultura y Educación", gastoOperativo: 24500, desc: "Producción de eventos, festivales, talleres, escuelas de arte y centros culturales" },
+            { id: "sec-movilidad", name: "Movilidad", gastoOperativo: 22000, desc: "Sistemas inteligentes de tránsito, videocontrol, mantenimiento semafórico" },
+            { id: "sec-desarrollo-humano", name: "Desarrollo Humano y Hábitat", gastoOperativo: 18500, desc: "Logística asistencial, centros comunitarios, operativos territoriales" },
+            { id: "sec-control", name: "Control y Convivencia", gastoOperativo: 13200, desc: "Operatividad de inspectores, logística vehicular, corralón municipal" },
+            { id: "sec-deporte", name: "Deporte y Turismo", gastoOperativo: 11800, desc: "Promoción turística, maratones, eventos deportivos, mantenimiento de predios" },
+            { id: "sec-desarrollo-econ", name: "Desarrollo Económico y Empleo", gastoOperativo: 7500, desc: "Ferias, misiones comerciales, eventos Pyme (FIAR, Activa Pymes)" },
+            { id: "sec-generaling", name: "Jefatura de Gabinete e Intendencia", gastoOperativo: 9400, desc: "Publicidad oficial, desarrollo de software, Data Lake, modernización" },
+            { id: "sec-genero", name: "Igualdad, Género y DD.HH.", gastoOperativo: 3800, desc: "Campañas públicas de concientización, talleres y dispositivos" }
+        ];
+
+        // 2. Checklist de Tasas OGI
+        const TASAS_CHECKLIST = [
+            { id: "t-vial-combustibles", name: "Tasa Mantenimiento Vías Urbanas (Tasa Vial Combustibles)", amount: 5779.03, desc: "Art. 96 ter OGI. 1,60% por litro de combustible líquido y m³ de GNC.", cat: "Tasa Vial" },
+            { id: "drei-transporte", name: "Sobretasa DReI - Fondo Compensador Transporte", amount: 14732.05, desc: "Adosado en el DReI para subsidiar el sistema de colectivos.", cat: "DReI Afectado" },
+            { id: "drei-salud", name: "Sobretasa DReI - Fondo Insumos para la Salud", amount: 12986.50, desc: "Porcentaje adosado al DReI con destino a compras médicas.", cat: "DReI Afectado" },
+            { id: "drei-discapacidad", name: "Sobretasa DReI - Fondo Discapacitados", amount: 1755.28, desc: "Sobretasa específica en el DReI para programas de discapacidad.", cat: "DReI Afectado" },
+            { id: "drei-garantias", name: "Sobretasa DReI - Fondo Garantías Transporte", amount: 1636.90, desc: "Fondo de reserva del sistema de colectivos vía DReI.", cat: "DReI Afectado" },
+            { id: "drei-menor", name: "Sobretasa DReI - Fondo Menor y Familia", amount: 38.76, desc: "Fondo específico menor adosado al DReI.", cat: "DReI Afectado" },
+            { id: "t-act-adm", name: "Tasa Actuaciones Administrativas (Sellados de Trámites)", amount: 6613.35, desc: "Arts. 97 a 110 OGI. Sellados burocráticos por notas y expedientes.", cat: "Sellados" },
+            { id: "t-medidores", name: "Tasa Contralor e Inspección de Medidores (Luz y Gas)", amount: 1837.88, desc: "Art. 59 OGI. 6‰ sobre facturas de gas y energía eléctrica.", cat: "Tasas Servicios" },
+            { id: "t-planos", name: "Tasa Servicios Técnicos y Revisión de Planos", amount: 792.18, desc: "Arts. 60 y 61 OGI. Arancel por presentar planos de obras.", cat: "Tasas Obras" },
+            { id: "t-antenas", name: "Tasa Factibilidad y Control de Antenas", amount: 232.20, desc: "Arts. 67 bis y 68 OGI. Arancel de instalación y control bimestral.", cat: "Tasas Control" },
+            { id: "tgi-forestacion", name: "Sobretasa TGI - Fondo de Forestación", amount: 454.88, desc: "Art. 1 a 3 OGI. Ítem específico en la boleta de TGI.", cat: "Sobretasas TGI" },
+            { id: "tgi-preservacion", name: "Sobretasa TGI - Preservación Urbanística", amount: 191.09, desc: "Art. 1 a 3 OGI. Ítem en boleta de TGI para patrimonio.", cat: "Sobretasas TGI" },
+            { id: "tgi-alumbrado", name: "Sobretasa TGI - Fondo Contribución Alumbrado", amount: 302.37, desc: "Recargo anexo en la boleta de TGI.", cat: "Sobretasas TGI" },
+            { id: "tgi-infra", name: "Sobretasa TGI - Fondo Infraestructuras Industriales", amount: 114.84, desc: "Recargo en TGI para parques industriales.", cat: "Sobretasas TGI" },
+            { id: "tgi-salud", name: "Sobretasa TGI - Fondo Salud / PROMUSIDA", amount: 1818.10, desc: "Recargos sanitarios adosados a la TGI.", cat: "Sobretasas TGI" },
+            { id: "tgi-desagues", name: "Sobretasa TGI - FMOP Fondo de Desagües Pluviales", amount: 11600.17, desc: "Fondo específico en TGI para drenajes pluviales.", cat: "Sobretasas TGI" },
+            { id: "tgi-obras-pub", name: "Sobretasa TGI - Fondo Municipal de Obras Públicas", amount: 5327.59, desc: "Fondo específico para obras en la boleta de TGI.", cat: "Sobretasas TGI" },
+            { id: "d-publicidad", name: "Derechos Publicitarios (Carteles Comerciales)", amount: 15.75, desc: "Arts. 12 inc. b/c y 64 OGI. Recargo por marquesinas y cartelería.", cat: "Derechos" },
+            { id: "d-ocup-dominio", name: "Derecho Ocupación Dominio Público (Mesas, Sillas, Kioscos)", amount: 364.51, desc: "Arts. 12 inc. a, 37 y 42 OGI. Canon por uso de veredas y vía pública.", cat: "Derechos" },
+            { id: "d-espectaculos", name: "Derecho Diversiones y Espectáculos Públicos", amount: 2250.42, desc: "Arts. 30 a 33 OGI. 1% sobre entradas a cines y recitales.", cat: "Derechos" },
+            { id: "d-cementerios", name: "Derechos de Cementerios (Mantenimiento, Nichos, Cremación)", amount: 470.85, desc: "Arts. 14 y 15 OGI. Mantenimiento y trámites de necrópolis.", cat: "Derechos" },
+            { id: "d-fiscaliz-conces", name: "Derecho Fiscalización Concesionarios de Servicios", amount: 1555.48, desc: "Art. 57 OGI. 5% sobre boleto TUP y 1% a concesionarios.", cat: "Derechos" },
+            { id: "d-obras-publicas", name: "Derecho Contralor e Inspección Obras Públicas", amount: 250.20, desc: "Art. 58 OGI. Canon por cuadra intervenida de calzada.", cat: "Derechos" },
+            { id: "d-etur", name: "Contribución Especial ETUR (Ente de Turismo)", amount: 1947.76, desc: "Art. 12 ter OGI. Adicional cobrado a comercios y hoteles.", cat: "Derechos" }
+        ];
+
+        // 3. Matriz de Trazabilidad
+        const TRAZABILIDAD_DATA = [
+            { art: "Art. 96 ter / quater", tasa: "Tasa por Mantenimiento de Vías Urbanas (Tasa Vial)", cod: "11.01.02.04.07", monto: "$ 5.779 M", fondo: "Fondo Mantenimiento Vías Urbanas (Fte 2.01.72)", sec: "Obras Públicas", gasto: "Reparación de calzadas, fresado y bacheo (Inciso 3)", propuesta: "Derogación inmediata por doble imposición. Reducir compras de asfalto y servicios de Obras Públicas." },
+            { art: "Art. 7 y 8 (Inc. 6)", tasa: "DReI - Fondo Compensador Sistema de Transporte", cod: "11.01.03.01.06", monto: "$ 14.732 M", fondo: "Fondo Compensador Transporte (Fte 2.01.43)", sec: "Movilidad", gasto: "Subsidios corrientes a empresas de colectivos (Inciso 5)", propuesta: "Eliminar el recargo del DReI. Reestructurar frecuencias y auditar subsidios al TUP." },
+            { art: "Art. 7 y 8 (Inc. 2)", tasa: "DReI - Fondo Insumos para la Salud", cod: "11.01.03.01.02", monto: "$ 12.986 M", fondo: "Fondo Insumos para la Salud (Fte 2.01.14)", sec: "Salud Pública", gasto: "Adquisición de medicamentos y descartables LEM (Inciso 2)", propuesta: "Unificar en Rentas Generales y auditar contrataciones no farmacológicas de Salud." },
+            { art: "Art. 7 y 8 (Inc. 3/7)", tasa: "DReI - Fondo Discapacidad y Garantías de Transporte", cod: "11.01.03.01.03/07", monto: "$ 3.392 M", fondo: "Fondos con Afectación Específica", sec: "Desarrollo Humano / Movilidad", gasto: "Programas de inclusión y fondo de reserva de colectivos", propuesta: "Absorber con reducción de gastos de protocolo y eventos en ambas secretarías." },
+            { art: "Arts. 97 a 110", tasa: "Tasa de Actuaciones Administrativas (Sellados y Trámites)", cod: "11.01.02.05.00", monto: "$ 6.613 M", fondo: "Transporte ($4.145 M), Libre Disp ($1.505 M), IMPS ($501 M)", sec: "Movilidad y Gobierno", gasto: "Subsidios de movilidad y funcionamiento administrativo central", propuesta: "Eliminación del 100% de sellados. Suprimir la burocracia papel con la digitalización de trámites." },
+            { art: "Art. 59", tasa: "Tasa de Contralor e Inspección de Medidores (Luz y Gas)", cod: "11.01.02.02.02", monto: "$ 1.837 M", fondo: "FMOP - Pavimentos (Fte 2.01.50)", sec: "Obras Públicas", gasto: "Pavimentación y mantenimiento vial (Inciso 3)", propuesta: "Derogación directa. Aliviar tarifas de luz y gas a familias y comercios." },
+            { art: "Arts. 1 a 3 (Fdos)", tasa: "Sobretasas en Boleta de TGI (Salud, Forestación, Preservación)", cod: "11.01.02.01.02-09", monto: "$ 32.536 M (Total Fondos)", fondo: "9 Cuentas Especiales Afectadas", sec: "Ambiente, Obras y Salud", gasto: "Obras de drenaje ($11.600 M), Salud ($12.727 M), Obras ($5.327 M)", propuesta: "Unificar la TGI en un concepto transparente y podar gastos en mantenimiento verde tercerizado." },
+            { art: "Arts. 60 y 61", tasa: "Tasa Servicios Técnicos de Revisión de Planos e Inspección", cod: "11.01.02.03.01", monto: "$ 792 M", fondo: "Libre Disponibilidad", sec: "Planeamiento", gasto: "Sueldos y funcionamiento de Obras Particulares", propuesta: "Exención a viviendas unifamiliares y locales comerciales para fomentar inversiones." },
+            { art: "Arts. 12 b/c y 64", tasa: "Derechos Publicitarios (Carteles y Marquesinas)", cod: "11.01.03.10.00", monto: "$ 15,7 M", fondo: "Libre Disponibilidad", sec: "Hacienda / Control", gasto: "Rentas Generales", propuesta: "Eliminación total para comercios barriales. El costo fiscal es insignificante ($15,7 M)." },
+            { art: "Arts. 12 a, 37 y 42", tasa: "Derecho Ocupación Dominio Público (Mesas, Sillas, Kioscos)", cod: "11.01.03.05.00", monto: "$ 364,5 M", fondo: "Libre Disp. ($343 M) y Salud ($15 M)", sec: "Control y Convivencia", gasto: "Operatividad de inspección y control", propuesta: "Exención a bares y restaurantes para promover el empleo gastronómico en peatonales y barrios." },
+            { art: "Arts. 30 a 33", tasa: "Derecho Acceso a Diversiones y Espectáculos Públicos", cod: "11.01.03.03.00", monto: "$ 2.250 M", fondo: "Transporte ($1.605 M), Discapacidad ($270 M), Cultura ($35 M)", sec: "Movilidad y Cultura", gasto: "Subsidios al transporte y fomento cultural", propuesta: "Bajar la alícuota a recitales y teatros para revitalizar la agenda de espectáculos." },
+            { art: "Arts. 14 y 15", tasa: "Derechos de Cementerios (Mantenimiento, Nichos, Cremación)", cod: "11.01.03.02.00", monto: "$ 470,8 M", fondo: "Libre Disp. ($233 M), Nichos ($118 M), Fúnebres ($118 M)", sec: "Ambiente y Espacio Público", gasto: "Mantenimiento de La Piedad y El Salvador", propuesta: "Digitalizar trámites de transferencias y eliminar aranceles a familias de bajos recursos." },
+            { art: "Art. 57", tasa: "Derecho Fiscalización Concesionarios de Servicios Públicos", cod: "11.01.03.06.01", monto: "$ 1.555 M", fondo: "Libre Disponibilidad", sec: "Movilidad / Servicios Públicos", gasto: "Control de contratos de concesión", propuesta: "Revisar costos cruzados en los pliegos de licitación de transporte y recolección." },
+            { art: "Art. 12 ter / ETUR", tasa: "Contribución Especial de Turismo (ETUR)", cod: "11.01.03.09.05", monto: "$ 1.947 M", fondo: "Fondo Contribución ETUR (Fte 2.01.28)", sec: "Deporte y Turismo", gasto: "Promoción turística y eventos de la Subsecretaría", propuesta: "Absorber con ahorro en producción de eventos y publicidad oficial." },
+            { art: "Arts. 67 bis y 68", tasa: "Tasa por Factibilidad y Control de Antenas", cod: "11.01.02.06.00", monto: "$ 232,2 M", fondo: "Libre Disponibilidad", sec: "Gobierno / Planeamiento", gasto: "Inspecciones de telecomunicaciones", propuesta: "Simplificar habilitaciones para acelerar el despliegue de conectividad 5G." }
+        ];
+
+        // 4. Catálogo Completo
+        const RECURSOS_COMPLETOS = [
+            { cod: "1.01.04.01.00", art: "Arts. 7 a 13", nom: "Derecho de Registro e Inspección (DReI Total)", monto: "$ 259.891.121.000", tipo: "Derecho Actividad", fte: "Mixta (Libre Disp. $228.741 M + Afectados $31.149 M)" },
+            { cod: "11.01.03.01.01", art: "Art. 7", nom: "  • DReI Libre Disponibilidad (Rentas Generales)", monto: "$ 228.741.644.000", tipo: "DReI Puro", fte: "Libre Disponibilidad" },
+            { cod: "11.01.03.01.06", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Compensador Sistema de Transporte", monto: "$ 14.732.047.000", tipo: "Sobretasa DReI", fte: "Afectación Específica (Transporte)" },
+            { cod: "11.01.03.01.02", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Insumos Para la Salud", monto: "$ 12.986.501.000", tipo: "Sobretasa DReI", fte: "Afectación Específica (Salud)" },
+            { cod: "11.01.03.01.03", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Discapacitados", monto: "$ 1.755.275.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
+            { cod: "11.01.03.01.07", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Garantías Sistema de Transporte", monto: "$ 1.636.895.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
+            { cod: "11.01.03.01.05", art: "Art. 8 (Fdo)", nom: "  • DReI - Fondo Atención al Menor y la Familia", monto: "$ 38.759.000", tipo: "Sobretasa DReI", fte: "Afectación Específica" },
+            { cod: "1.01.03.01.00", art: "Arts. 1 a 6", nom: "Tasa General de Inmuebles (TGI Total)", monto: "$ 122.650.961.000", tipo: "Tasa Inmobiliaria", fte: "Mixta (Libre Disp. $90.114 M + Fondos $32.536 M)" },
+            { cod: "11.01.02.01.01", art: "Art. 1", nom: "  • TGI Libre Disponibilidad", monto: "$ 90.114.028.000", tipo: "TGI Pura", fte: "Libre Disponibilidad" },
+            { cod: "11.01.02.01.04", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Solidario Emergencia Salud", monto: "$ 12.727.906.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.03", art: "Art. 1 (Fdo)", nom: "  • TGI - FMOP Fondo de Desagües Pluviales", monto: "$ 11.600.166.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.02", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Municipal de Obras Públicas", monto: "$ 5.327.591.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.08", art: "Art. 1 (Fdo)", nom: "  • TGI - PROMUSIDA", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.09", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Emergencia Salud", monto: "$ 909.048.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.06", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Municipal de Forestación", monto: "$ 454.877.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.05", art: "Art. 1 (Fdo)", nom: "  • TGI - Contribución Alumbrado Público", monto: "$ 302.369.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "11.01.02.01.07", art: "Art. 1 (Fdo)", nom: "  • TGI - Fondo Preservación Urbanística", monto: "$ 191.089.000", tipo: "Sobretasa TGI", fte: "Afectación Específica" },
+            { cod: "1.01.03.04.07", art: "Art. 96 ter", nom: "Tasa por Mantenimiento de Vías Urbanas (Combustibles)", monto: "$ 5.779.031.000", tipo: "Tasa Vial", fte: "Afectación Específica (FMOP Vías Urbanas)" },
+            { cod: "1.01.03.05.00", art: "Arts. 97 a 110", nom: "Tasa de Actuaciones Administrativas (Sellados)", monto: "$ 6.613.351.000", tipo: "Sellados", fte: "Fdo. Transporte ($4.145 M), LD ($1.505 M), IMPS ($501 M)" },
+            { cod: "1.01.03.02.00", art: "Art. 59", nom: "Tasa de Contralor e Inspección de Medidores", monto: "$ 1.837.876.000", tipo: "Tasa Servicios", fte: "Afectación Específica (FMOP Pavimentos)" },
+            { cod: "1.01.03.03.00", art: "Arts. 60 y 61", nom: "Tasa Servicios Técnicos y Revisión de Planos", monto: "$ 792.177.000", tipo: "Tasa Obras", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.03.00", art: "Arts. 30 a 33", nom: "Derecho Diversiones y Espectáculos Públicos", monto: "$ 2.250.415.000", tipo: "Derecho", fte: "Transporte ($1.605 M), Discapacitados ($270 M)" },
+            { cod: "1.01.04.05.00", art: "Arts. 37 y 42", nom: "Derecho de Ocupación del Dominio Público", monto: "$ 364.513.000", tipo: "Derecho Espacio", fte: "LD ($343 M), Salud ($15 M)" },
+            { cod: "1.01.04.10.00", art: "Art. 64", nom: "Derechos Publicitarios (Carteles)", monto: "$ 15.750.000", tipo: "Derecho Publicidad", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.06.00", art: "Art. 57", nom: "Derecho Fiscalización Concesionarios Servicios", monto: "$ 1.555.483.000", tipo: "Derecho Fiscaliz.", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.07.00", art: "Art. 58", nom: "Derecho Contralor e Inspección Obras Públicas", monto: "$ 250.196.000", tipo: "Derecho Obras", fte: "Libre Disponibilidad" },
+            { cod: "1.01.04.09.05", art: "Art. 12 ter", nom: "Contribución ETUR (Ente de Turismo)", monto: "$ 1.947.756.000", tipo: "Derecho Turismo", fte: "Afectado ETUR" },
+            { cod: "1.01.04.02.00", art: "Arts. 14 y 15", nom: "Derechos de Cementerios", monto: "$ 470.851.000", tipo: "Derecho", fte: "LD ($233 M), Nichos ($118 M), Fúnebres ($118 M)" },
+            { cod: "1.01.05.02.00", art: "Ley 7797/75", nom: "EPE 6% Alumbrado Público", monto: "$ 15.385.633.000", tipo: "Recargo Tarifa", fte: "Libre Disponibilidad" },
+            { cod: "1.03.06.01.00", art: "Art. 83 y CTM", nom: "Multas por Infracciones de Tránsito", monto: "$ 20.301.438.000", tipo: "Multas", fte: "LD ($11.329 M), Fdo. Transporte ($6.225 M), ACARA ($1.431 M)" },
+            { cod: "1.03.08.09.00", art: "Estacionamiento", nom: "Tarifa Adicional Estacionamiento Medido", monto: "$ 1.514.134.000", tipo: "Tarifa", fte: "Fdo. Transporte ($1.362 M), Garantías ($151 M)" }
+        ];
+
+        let currentRecorteMode = 'secretarias';
+
+        function init() {
+            renderSecretariasSliders();
+            renderTaxesChecklist();
+            renderTrazabilidad();
+            renderTasas();
+            initCharts();
+            updateSimulation();
+        }
+
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function setRecorteMode(mode) {
+            currentRecorteMode = mode;
+            if (mode === 'secretarias') {
+                document.getElementById('view-secretarias').style.display = 'block';
+                document.getElementById('view-incisos').style.display = 'none';
+                document.getElementById('btn-mode-sec').classList.add('active');
+                document.getElementById('btn-mode-inc').classList.remove('active');
+            } else {
+                document.getElementById('view-secretarias').style.display = 'none';
+                document.getElementById('view-incisos').style.display = 'block';
+                document.getElementById('btn-mode-sec').classList.remove('active');
+                document.getElementById('btn-mode-inc').classList.add('active');
+            }
+            updateSimulation();
+        }
+
+        function renderSecretariasSliders() {
+            const container = document.getElementById('view-secretarias');
+            container.innerHTML = SECRETARIAS_DATA.map(s => `
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span>${s.name} ($ ${s.gastoOperativo.toLocaleString('es-AR')} M)</span>
+                        <span class="slider-val" id="val-${s.id}">0% ($ 0 M)</span>
+                    </div>
+                    <input type="range" id="slide-${s.id}" min="0" max="15" value="0" step="0.5" oninput="updateSimulation()">
+                    <span style="font-size: 0.68rem; color: var(--text-muted);">${s.desc}</span>
+                </div>
+            `).join('') + `
+                <div class="slider-group" style="border-left: 3px solid var(--accent);">
+                    <div class="slider-header">
+                        <span style="color: var(--accent);">Crédito Adicional Discrecional ($ 17.720 M)</span>
+                        <span class="slider-val" id="val-sec-credito">0% ($ 0 M)</span>
+                    </div>
+                    <input type="range" id="slide-sec-credito" min="0" max="100" value="0" step="5" oninput="updateSimulation()">
+                    <span style="font-size: 0.68rem; color: var(--text-muted);">Partida centralizada de refuerzo del Departamento Ejecutivo</span>
+                </div>
+            `;
+        }
+
+        function renderTaxesChecklist() {
+            const container = document.getElementById('taxes-checklist');
+            container.innerHTML = TASAS_CHECKLIST.map(t => `
+                <div class="check-item" onclick="toggleCheckbox('${t.id}')">
+                    <input type="checkbox" id="${t.id}" value="${t.amount}" data-name="${t.name}" onchange="updateSimulation()" onclick="event.stopPropagation()">
+                    <div class="check-info">
+                        <span class="check-title">${t.name}</span>
+                        <span class="check-desc"><span class="tag tag-yellow">${t.cat}</span> ${t.desc}</span>
+                    </div>
+                    <div class="check-amount">$ ${t.amount.toLocaleString('es-AR', {minimumFractionDigits: 1, maximumFractionDigits: 2})} M</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCheckbox(id) {
+            const cb = document.getElementById(id);
+            cb.checked = !cb.checked;
+            updateSimulation();
+        }
+
+        function applyPreset(preset) {
+            // Reset general
+            document.querySelectorAll('#taxes-checklist input[type=checkbox]').forEach(cb => cb.checked = false);
+            document.getElementById('drei-reduction-pct').value = "0";
+            
+            // Reset sliders secretarias
+            SECRETARIAS_DATA.forEach(s => {
+                const sl = document.getElementById(`slide-${s.id}`);
+                if (sl) sl.value = 0;
+            });
+            const slCred = document.getElementById('slide-sec-credito');
+            if (slCred) slCred.value = 0;
+
+            // Reset sliders globales
+            const g3 = document.getElementById('slide-global-inc3'); if (g3) g3.value = 0;
+            const g2 = document.getElementById('slide-global-inc2'); if (g2) g2.value = 0;
+            const g11 = document.getElementById('slide-global-inc11'); if (g11) g11.value = 0;
+            const g5 = document.getElementById('slide-global-inc5'); if (g5) g5.value = 0;
+
+            if (preset === 'cero-sellados') {
+                document.getElementById('t-act-adm').checked = true;
+                if (document.getElementById('slide-sec-gobierno')) document.getElementById('slide-sec-gobierno').value = 6;
+                if (document.getElementById('slide-sec-movilidad')) document.getElementById('slide-sec-movilidad').value = 6;
+                if (slCred) slCred.value = 25;
+            } else if (preset === 'fin-tasa-vial') {
+                document.getElementById('t-vial-combustibles').checked = true;
+                if (document.getElementById('slide-sec-obras')) document.getElementById('slide-sec-obras').value = 6;
+                if (document.getElementById('slide-sec-ambiente')) document.getElementById('slide-sec-ambiente').value = 3;
+            } else if (preset === 'alivio-pyme') {
+                document.getElementById('d-publicidad').checked = true;
+                document.getElementById('d-ocup-dominio').checked = true;
+                document.getElementById('t-medidores').checked = true;
+                document.getElementById('drei-reduction-pct').value = "5";
+                if (document.getElementById('slide-sec-desarrollo-econ')) document.getElementById('slide-sec-desarrollo-econ').value = 8;
+                if (document.getElementById('slide-sec-cultura')) document.getElementById('slide-sec-cultura').value = 6;
+                if (document.getElementById('slide-sec-gobierno')) document.getElementById('slide-sec-gobierno').value = 5;
+                if (document.getElementById('slide-sec-ambiente')) document.getElementById('slide-sec-ambiente').value = 5;
+                if (slCred) slCred.value = 30;
+            } else if (preset === 'poda-sobretasas-tgi') {
+                document.getElementById('tgi-forestacion').checked = true;
+                document.getElementById('tgi-preservacion').checked = true;
+                document.getElementById('tgi-alumbrado').checked = true;
+                document.getElementById('tgi-infra').checked = true;
+                document.getElementById('tgi-salud').checked = true;
+                if (document.getElementById('slide-sec-ambiente')) document.getElementById('slide-sec-ambiente').value = 4;
+            } else if (preset === 'shock-total') {
+                document.getElementById('t-act-adm').checked = true;
+                document.getElementById('t-vial-combustibles').checked = true;
+                document.getElementById('d-publicidad').checked = true;
+                document.getElementById('d-ocup-dominio').checked = true;
+                document.getElementById('t-medidores').checked = true;
+                document.getElementById('tgi-forestacion').checked = true;
+                document.getElementById('tgi-preservacion').checked = true;
+                document.getElementById('drei-reduction-pct').value = "10";
+                
+                SECRETARIAS_DATA.forEach(s => {
+                    const sl = document.getElementById(`slide-${s.id}`);
+                    if (sl) sl.value = 6;
+                });
+                if (slCred) slCred.value = 50;
+            }
+
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            let totalAhorro = 0;
+            let ahorroServicios = 0;
+            let ahorroBienes = 0;
+            let ahorroAdic = 0;
+
+            if (currentRecorteMode === 'secretarias') {
+                SECRETARIAS_DATA.forEach(s => {
+                    const slider = document.getElementById(`slide-${s.id}`);
+                    const pct = slider ? parseFloat(slider.value) : 0;
+                    const ahorro = (s.gastoOperativo * pct) / 100;
+                    totalAhorro += ahorro;
+                    ahorroServicios += ahorro * 0.78;
+                    ahorroBienes += ahorro * 0.22;
+                    const valLabel = document.getElementById(`val-${s.id}`);
+                    if (valLabel) valLabel.innerText = `${pct}% ($ ${ahorro.toFixed(1)} M)`;
+                });
+
+                const slideCred = document.getElementById('slide-sec-credito');
+                const pctCred = slideCred ? parseFloat(slideCred.value) : 0;
+                ahorroAdic = (17720 * pctCred) / 100;
+                totalAhorro += ahorroAdic;
+                const valCredLabel = document.getElementById('val-sec-credito');
+                if (valCredLabel) valCredLabel.innerText = `${pctCred}% ($ ${ahorroAdic.toFixed(1)} M)`;
+
+            } else {
+                const inc3_pct = parseFloat(document.getElementById('slide-global-inc3').value);
+                const inc2_pct = parseFloat(document.getElementById('slide-global-inc2').value);
+                const inc11_pct = parseFloat(document.getElementById('slide-global-inc11').value);
+                const inc5_pct = parseFloat(document.getElementById('slide-global-inc5').value);
+
+                ahorroServicios = (334973.82 * inc3_pct) / 100;
+                ahorroBienes = (92701.96 * inc2_pct) / 100;
+                ahorroAdic = (17720.00 * inc11_pct) / 100;
+                const ahorroInc5 = (116683.83 * inc5_pct) / 100;
+
+                totalAhorro = ahorroServicios + ahorroBienes + ahorroAdic + ahorroInc5;
+
+                document.getElementById('val-global-inc3').innerText = `${inc3_pct}% ($ ${ahorroServicios.toFixed(1)} M)`;
+                document.getElementById('val-global-inc2').innerText = `${inc2_pct}% ($ ${ahorroBienes.toFixed(1)} M)`;
+                document.getElementById('val-global-inc11').innerText = `${inc11_pct}% ($ ${ahorroAdic.toFixed(1)} M)`;
+                document.getElementById('val-global-inc5').innerText = `${inc5_pct}% ($ ${ahorroInc5.toFixed(1)} M)`;
+            }
+
+            document.getElementById('res-ahorro-servicios').innerText = `$ ${ahorroServicios.toFixed(1)} M`;
+            document.getElementById('res-ahorro-bienes').innerText = `$ ${ahorroBienes.toFixed(1)} M`;
+            document.getElementById('res-ahorro-adic').innerText = `$ ${ahorroAdic.toFixed(1)} M`;
+            document.getElementById('total-ahorro-disp').innerText = `$ ${totalAhorro.toFixed(1)} M`;
+
+            // Costo DReI
+            const dreiPct = parseFloat(document.getElementById('drei-reduction-pct').value);
+            const costoDrei = (228741.64 * dreiPct) / 100;
+            document.getElementById('costo-drei').innerText = `$ ${costoDrei.toFixed(1)} M`;
+
+            // Costo Otras Tasas
+            let costoOtrasTasas = 0;
+            let tasasMarcadas = [];
+            document.querySelectorAll('#taxes-checklist input[type=checkbox]:checked').forEach(cb => {
+                const val = parseFloat(cb.value);
+                costoOtrasTasas += val;
+                tasasMarcadas.push({ name: cb.getAttribute('data-name'), amount: val });
+            });
+            document.getElementById('costo-otras-tasas').innerText = `$ ${costoOtrasTasas.toFixed(1)} M`;
+
+            const totalAlivio = costoDrei + costoOtrasTasas;
+            document.getElementById('total-costo-alivio').innerText = `$ ${totalAlivio.toFixed(1)} M`;
+
+            // Balance
+            const balance = totalAhorro - totalAlivio;
+            const banner = document.getElementById('balance-banner');
+
+            if (totalAlivio === 0 && totalAhorro === 0) {
+                banner.className = "balance-card balance-ok";
+                banner.innerHTML = "Ajustá los recortes de gasto y seleccioná tributos a derogar para calcular la viabilidad fiscal.";
+            } else if (balance >= 0) {
+                banner.className = "balance-card balance-ok";
+                banner.innerHTML = `✅ REFORMA FISCALMENTE SOSTENIBLE: Superávit remanente de $ ${balance.toFixed(1)} M luego de financiar la baja de tasas.`;
+            } else {
+                banner.className = "balance-card balance-deficit";
+                banner.innerHTML = `⚠️ COBERTURA INSUFICIENTE: Faltan $ ${Math.abs(balance).toFixed(1)} M de ahorro en gastos para compensar la baja tributaria.`;
+            }
+
+            // Generar Dictamen Legislativo Automático
+            generateDictamen(totalAhorro, totalAlivio, balance, dreiPct, costoDrei, tasasMarcadas);
+        }
+
+        function generateDictamen(ahorro, alivio, balance, dreiPct, costoDrei, tasas) {
+            const box = document.getElementById('dictamen-text');
+            if (alivio === 0 && ahorro === 0) {
+                box.innerText = "Configurá tu propuesta en el simulador para generar automáticamente la fundamentación técnica.";
+                return;
+            }
+
+            let txt = `MEMORÁNDUM TÉCNICO / DICTAMEN DE REFORMA TRIBUTARIA Y GASTOS - EJERCICIO 2026\n`;
+            txt += `========================================================================================\n\n`;
+            txt += `1. IMPACTO FISCAL CONSOLIDADO:\n`;
+            txt += `   • Ahorro Genuino en Gastos Generado: $ ${ahorro.toFixed(1)} Millones de pesos\n`;
+            txt += `   • Alivio Tributario Propuesto a Contribuyentes: $ ${alivio.toFixed(1)} Millones de pesos\n`;
+            txt += `   • Resultado Neto sobre el Presupuesto: ${balance >= 0 ? 'SUPERÁVIT DE $ ' + balance.toFixed(1) : 'DÉFICIT DE $ ' + Math.abs(balance).toFixed(1)} Millones de pesos\n\n`;
+
+            txt += `2. DETALLE DE TRIBUTOS Y TASAS A DEROGAR / MODIFICAR:\n`;
+            if (dreiPct > 0) {
+                txt += `   - Reducción de Alícuota General del DReI (Arts. 7 y 8 OGI): -${dreiPct}% ($ ${costoDrei.toFixed(1)} M)\n`;
+            }
+            tasas.forEach(t => {
+                txt += `   - Derogación / Supresión: ${t.name} ($ ${t.amount.toFixed(1)} M)\n`;
+            });
+
+            txt += `\n3. FUENTE DE COMPENSACIÓN DEL GASTO (Art. 15 Presupuesto 2026):\n`;
+            if (currentRecorteMode === 'secretarias') {
+                txt += `   Recortes operativos por Jurisdicción en Servicios No Personales e Insumos:\n`;
+                SECRETARIAS_DATA.forEach(s => {
+                    const slider = document.getElementById(`slide-${s.id}`);
+                    const pct = slider ? parseFloat(slider.value) : 0;
+                    if (pct > 0) {
+                        const m = (s.gastoOperativo * pct) / 100;
+                        txt += `   • ${s.name}: -${pct}% ($ ${m.toFixed(1)} M)\n`;
+                    }
+                });
+                const slideCred = document.getElementById('slide-sec-credito');
+                const pctCred = slideCred ? parseFloat(slideCred.value) : 0;
+                if (pctCred > 0) {
+                    txt += `   • Crédito Adicional Discrecional (Inc. 11): -${pctCred}% ($ ${((17720 * pctCred)/100).toFixed(1)} M)\n`;
+                }
+            } else {
+                txt += `   Recorte global por Inciso Presupuestario en la Administración Central.\n`;
+            }
+
+            txt += `\n4. CONCLUSIÓN DE VIABILIDAD:\n`;
+            txt += balance >= 0 
+                ? `   La iniciativa cuenta con pleno respaldo presupuestario sin comprometer la masa salarial ni las prestaciones asistenciales de salud.`
+                : `   Se requiere ampliar el margen de ahorro en $ ${Math.abs(balance).toFixed(1)} M para evitar desequilibrio presupuestario.`;
+
+            box.innerText = txt;
+        }
+
+        function copyDictamen() {
+            const txt = document.getElementById('dictamen-text').innerText;
+            navigator.clipboard.writeText(txt).then(() => {
+                alert("¡Texto del Dictamen copiado al portapapeles!");
+            });
+        }
+
+        function renderTrazabilidad() {
+            const tbody = document.getElementById('tbody-trazabilidad');
+            tbody.innerHTML = TRAZABILIDAD_DATA.map(d => `
+                <tr>
+                    <td><strong style="color: var(--primary);">${d.art}</strong><br>${d.tasa}</td>
+                    <td style="font-family: monospace; font-size: 0.75rem;">${d.cod}</td>
+                    <td class="amount">${d.monto}</td>
+                    <td><span class="tag tag-yellow">${d.fondo}</span></td>
+                    <td><strong>${d.sec}</strong></td>
+                    <td style="font-size: 0.75rem; color: var(--text-muted);">${d.gasto}</td>
+                    <td><span style="color: #86efac; font-size: 0.78rem;">${d.propuesta}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function filterTrazabilidad() {
+            const q = document.getElementById('search-trazabilidad').value.toLowerCase();
+            const rows = document.querySelectorAll('#tbody-trazabilidad tr');
+            rows.forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function renderTasas() {
+            const tbody = document.getElementById('tbody-tasas');
+            tbody.innerHTML = RECURSOS_COMPLETOS.map(d => `
+                <tr>
+                    <td style="font-family: monospace; color: var(--primary); font-size: 0.78rem;">${d.cod}</td>
+                    <td><span class="tag tag-yellow">${d.art}</span></td>
+                    <td><strong>${d.nom}</strong></td>
+                    <td class="amount">${d.monto}</td>
+                    <td><span class="tag tag-blue">${d.tipo}</span></td>
+                    <td style="font-size: 0.75rem; color: var(--text-muted);">${d.fte}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterTasas() {
+            const q = document.getElementById('search-tasas').value.toLowerCase();
+            const rows = document.querySelectorAll('#tbody-tasas tr');
+            rows.forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function initCharts() {
+            const ctxIncisos = document.getElementById('chartIncisos').getContext('2d');
+            new Chart(ctxIncisos, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Personal (Inc 1)', 'Servicios No Pers. (Inc 3)', 'Bienes de Uso (Inc 4)', 'Transferencias (Inc 5)', 'Bienes Consumo (Inc 2)', 'Deuda (Inc 7)', 'Otros / Créd. Adic.'],
+                    datasets: [{
+                        data: [416247, 334973, 128449, 116683, 92701, 52220, 46221],
+                        backgroundColor: ['#3b82f6', '#38bdf8', '#f59e0b', '#ec4899', '#10b981', '#64748b', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#f8fafc', font: { size: 9 } } }
+                    }
+                }
+            });
+
+            const ctxFin = document.getElementById('chartFinalidades').getContext('2d');
+            new Chart(ctxFin, {
+                type: 'bar',
+                data: {
+                    labels: ['Sanidad', 'Serv. Comunidad', 'Desarrollo Econ.', 'Bienestar Social', 'Admin. General', 'Cultura y Educ.', 'Deuda Pública'],
+                    datasets: [{
+                        label: 'Gasto Total ($ Millones)',
+                        data: [328033, 318301, 182412, 124654, 107363, 70533, 52220],
+                        backgroundColor: '#38bdf8',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
+                        y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
